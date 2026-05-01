@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <title>Vishaldeep Medical and General Store | Pharmacy</title>
+
+  <meta name="description" content="Vishaldeep Medical and General Store - Trusted pharmacy in Lasalgaon. Order medicines via WhatsApp. Prices in INR." />
+  <meta name="keywords" content="pharmacy Lasalgaon, medical store, Vishaldeep pharmacy" />
+
+  <style>
+    body{margin:0;font-family:Arial;background:#f4f7fb;}
+
+    header{
+      background:linear-gradient(135deg,#0b6b3a,#12a150);
+      color:white;
+      text-align:center;
+      padding:20px;
+      position:relative;
+    }
+
+    .lang{
+      position:absolute;
+      right:10px;
+      top:10px;
+    }
+
+    .lang button{
+      padding:5px 10px;
+      margin:2px;
+      border:none;
+      border-radius:5px;
+      cursor:pointer;
+    }
+
+    .logo{
+      width:60px;height:60px;background:white;
+      color:#0b6b3a;border-radius:50%;
+      margin:auto;font-weight:bold;
+      display:flex;align-items:center;justify-content:center;
+      margin-bottom:10px;
+    }
+
+    nav{
+      background:#084d29;
+      text-align:center;
+      padding:10px;
+    }
+
+    nav a{
+      color:white;
+      margin:10px;
+      text-decoration:none;
+      font-weight:bold;
+    }
+
+    .container{max-width:1000px;margin:auto;padding:15px;}
+
+    .card{
+      background:white;
+      padding:15px;
+      margin:10px 0;
+      border-radius:10px;
+      box-shadow:0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .products{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+      gap:10px;
+    }
+
+    .product{
+      border:1px solid #ddd;
+      padding:10px;
+      border-radius:10px;
+      text-align:center;
+    }
+
+    button{
+      background:#0b6b3a;
+      color:white;
+      border:none;
+      padding:8px;
+      margin-top:5px;
+      border-radius:5px;
+      cursor:pointer;
+    }
+
+    .whatsapp{
+      background:#25D366;
+      padding:10px;
+      display:inline-block;
+      color:white;
+      border-radius:8px;
+      text-decoration:none;
+      margin-top:10px;
+    }
+
+    .cart{
+      position:fixed;
+      right:10px;
+      bottom:10px;
+      background:white;
+      padding:10px;
+      width:220px;
+      box-shadow:0 0 10px rgba(0,0,0,0.2);
+      border-radius:10px;
+    }
+
+    iframe{
+      width:100%;
+      height:250px;
+      border:0;
+    }
+
+    footer{
+      text-align:center;
+      padding:15px;
+      background:#084d29;
+      color:white;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="lang">
+    <button onclick="setLang('en')">EN</button>
+    <button onclick="setLang('hi')">HI</button>
+  </div>
+
+  <div class="logo">VD</div>
+  <h1 id="title">Vishaldeep Medical Store</h1>
+  <p id="subtitle">Trusted Pharmacy & General Store</p>
+</header>
+
+<nav>
+  <a href="#about" id="nav1">About</a>
+  <a href="#shop" id="nav2">Medicines</a>
+  <a href="#contact" id="nav3">Contact</a>
+</nav>
+
+<div class="container">
+
+  <div class="card" id="about">
+    <h2 id="aboutTitle">About Us</h2>
+    <p id="aboutText">We provide genuine medicines at affordable Indian market prices.</p>
+    <p><b>Proprietor:</b> Vishal Deepak Babre</p>
+  </div>
+
+  <div class="card" id="shop">
+    <h2>Medicines (₹ INR)</h2>
+
+    <div class="products">
+
+      <div class="product">
+        <h3>Paracetamol</h3>
+        <p>₹15</p>
+        <button onclick="add('Paracetamol',15)">Add</button>
+      </div>
+
+      <div class="product">
+        <h3>Vitamin C</h3>
+        <p>₹60</p>
+        <button onclick="add('Vitamin C',60)">Add</button>
+      </div>
+
+      <div class="product">
+        <h3>Cough Syrup</h3>
+        <p>₹120</p>
+        <button onclick="add('Cough Syrup',120)">Add</button>
+      </div>
+
+      <div class="product">
+        <h3>Antacid</h3>
+        <p>₹35</p>
+        <button onclick="add('Antacid',35)">Add</button>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="card" id="contact">
+    <h2>Contact</h2>
+    <p>Yashwant Complex Shop No 11, Lasalgaon 422306</p>
+    <p>9850752963</p>
+
+    <a class="whatsapp" id="wa" href="#">Order on WhatsApp</a>
+  </div>
+
+  <div class="card">
+    <h2>Location</h2>
+    <iframe src="https://www.google.com/maps?q=Yashwant+Complex+Shop+No+11+Lasalgaon&output=embed"></iframe>
+  </div>
+
+</div>
+
+<div class="cart">
+  <h4>Cart</h4>
+  <ul id="list"></ul>
+  <p id="total">Total: ₹0</p>
+</div>
+
+<footer>
+  © 2026 Vishaldeep Medical & General Store
+</footer>
+
+<script>
+let cart=[];
+
+function add(n,p){
+  cart.push({name:n,price:p});
+  render();
+}
+
+function render(){
+  let list=document.getElementById("list");
+  list.innerHTML="";
+  let total=0;
+
+  cart
