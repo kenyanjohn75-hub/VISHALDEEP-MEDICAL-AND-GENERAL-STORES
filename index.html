@@ -1,15 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-
-  <title>Vishaldeep Medical and General Store | Pharmacy</title>
-
-  <meta name="description" content="Vishaldeep Medical and General Store - Trusted pharmacy in Lasalgaon. Order medicines via WhatsApp. Prices in INR." />
-  <meta name="keywords" content="pharmacy Lasalgaon, medical store, Vishaldeep pharmacy" />
-
-  <style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>  <title>Vishaldeep Medical and General Store | Trusted Pharmacy</title>  <meta name="description" content="Vishaldeep Medical and General Store - Trusted pharmacy in Lasalgaon offering genuine medicines and WhatsApp ordering." />  <style>
     body{margin:0;font-family:Arial;background:#f4f7fb;}
 
     header{
@@ -20,40 +12,16 @@
       position:relative;
     }
 
-    .lang{
-      position:absolute;
-      right:10px;
-      top:10px;
-    }
-
-    .lang button{
-      padding:5px 10px;
-      margin:2px;
-      border:none;
-      border-radius:5px;
-      cursor:pointer;
-    }
-
     .logo{
-      width:60px;height:60px;background:white;
+      width:70px;height:70px;background:white;
       color:#0b6b3a;border-radius:50%;
       margin:auto;font-weight:bold;
       display:flex;align-items:center;justify-content:center;
-      margin-bottom:10px;
+      font-size:28px;
     }
 
-    nav{
-      background:#084d29;
-      text-align:center;
-      padding:10px;
-    }
-
-    nav a{
-      color:white;
-      margin:10px;
-      text-decoration:none;
-      font-weight:bold;
-    }
+    nav{background:#084d29;text-align:center;padding:10px;}
+    nav a{color:white;margin:10px;text-decoration:none;font-weight:bold;}
 
     .container{max-width:1000px;margin:auto;padding:15px;}
 
@@ -63,6 +31,16 @@
       margin:10px 0;
       border-radius:10px;
       box-shadow:0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .badge{
+      display:inline-block;
+      background:#e8f5e9;
+      color:#0b6b3a;
+      padding:5px 10px;
+      border-radius:20px;
+      margin:5px;
+      font-size:12px;
     }
 
     .products{
@@ -76,6 +54,11 @@
       padding:10px;
       border-radius:10px;
       text-align:center;
+      background:white;
+    }
+
+    .product img{
+      width:100%;height:120px;object-fit:cover;border-radius:8px;
     }
 
     button{
@@ -98,21 +81,29 @@
       margin-top:10px;
     }
 
-    .cart{
+    .cart-btn{
       position:fixed;
       right:10px;
       bottom:10px;
-      background:white;
-      padding:10px;
-      width:220px;
-      box-shadow:0 0 10px rgba(0,0,0,0.2);
-      border-radius:10px;
+      background:#0b6b3a;
+      color:white;
+      padding:10px 12px;
+      border-radius:50px;
+      cursor:pointer;
+      z-index:999;
     }
 
-    iframe{
-      width:100%;
-      height:250px;
-      border:0;
+    .cart{
+      position:fixed;
+      right:10px;
+      bottom:60px;
+      background:white;
+      padding:10px;
+      width:240px;
+      box-shadow:0 0 10px rgba(0,0,0,0.2);
+      border-radius:10px;
+      display:none;
+      z-index:998;
     }
 
     footer{
@@ -121,104 +112,95 @@
       background:#084d29;
       color:white;
     }
-  </style>
-</head>
+  </style></head><body><header>
+  <div class="logo">✚</div>
+  <h1>Vishaldeep Medical Store</h1>
+  <p>Trusted Pharmacy & General Store</p>
+</header><nav>
+  <a href="#about">About</a>
+  <a href="#shop">Medicines</a>
+  <a href="#contact">Contact</a>
+</nav><div class="container">  <div class="card" id="about">
+    <h2>About Us</h2>
+    <p><b>Vishaldeep Medical and General Store</b> is a trusted pharmacy committed to providing genuine, affordable medicines with care and reliability.</p><div>
+  <span class="badge">✔ Genuine Medicines</span>
+  <span class="badge">✔ Affordable Prices</span>
+  <span class="badge">✔ Fast Service</span>
+  <span class="badge">✔ Trusted Local Pharmacy</span>
+</div>
 
-<body>
+<p>We focus on customer health, trust, and quality service for every prescription and medicine need.</p>
 
-<header>
-  <div class="lang">
-    <button onclick="setLang('en')">EN</button>
-    <button onclick="setLang('hi')">HI</button>
+<p><b>Proprietor:</b> Vishal Deepak Babre</p>
+
+  </div>  <div class="card" id="shop">
+    <h2>Medicines (₹ INR)</h2><div class="products">
+
+  <div class="product">
+    <img src="https://images.unsplash.com/photo-1587854692152-cbe660dbde88" />
+    <h3>Paracetamol</h3>
+    <p>₹15</p>
+    <button onclick="add('Paracetamol',15)">Add</button>
   </div>
 
-  <div class="logo">VD</div>
-  <h1 id="title">Vishaldeep Medical Store</h1>
-  <p id="subtitle">Trusted Pharmacy & General Store</p>
-</header>
-
-<nav>
-  <a href="#about" id="nav1">About</a>
-  <a href="#shop" id="nav2">Medicines</a>
-  <a href="#contact" id="nav3">Contact</a>
-</nav>
-
-<div class="container">
-
-  <div class="card" id="about">
-    <h2 id="aboutTitle">About Us</h2>
-    <p id="aboutText">We provide genuine medicines at affordable Indian market prices.</p>
-    <p><b>Proprietor:</b> Vishal Deepak Babre</p>
+  <div class="product">
+    <img src="https://images.unsplash.com/photo-1584017911766-d451b3d0e843" />
+    <h3>Vitamin C</h3>
+    <p>₹60</p>
+    <button onclick="add('Vitamin C',60)">Add</button>
   </div>
 
-  <div class="card" id="shop">
-    <h2>Medicines (₹ INR)</h2>
-
-    <div class="products">
-
-      <div class="product">
-        <h3>Paracetamol</h3>
-        <p>₹15</p>
-        <button onclick="add('Paracetamol',15)">Add</button>
-      </div>
-
-      <div class="product">
-        <h3>Vitamin C</h3>
-        <p>₹60</p>
-        <button onclick="add('Vitamin C',60)">Add</button>
-      </div>
-
-      <div class="product">
-        <h3>Cough Syrup</h3>
-        <p>₹120</p>
-        <button onclick="add('Cough Syrup',120)">Add</button>
-      </div>
-
-      <div class="product">
-        <h3>Antacid</h3>
-        <p>₹35</p>
-        <button onclick="add('Antacid',35)">Add</button>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="card" id="contact">
-    <h2>Contact</h2>
-    <p>Yashwant Complex Shop No 11, Lasalgaon 422306</p>
-    <p>9850752963</p>
-
-    <a class="whatsapp" id="wa" href="#">Order on WhatsApp</a>
-  </div>
-
-  <div class="card">
-    <h2>Location</h2>
-    <iframe src="https://www.google.com/maps?q=Yashwant+Complex+Shop+No+11+Lasalgaon&output=embed"></iframe>
+  <div class="product">
+    <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae" />
+    <h3>Cough Syrup</h3>
+    <p>₹120</p>
+    <button onclick="add('Cough Syrup',120)">Add</button>
   </div>
 
 </div>
 
-<div class="cart">
+  </div>  <div class="card" id="contact">
+    <h2>Contact</h2>
+    <p><b>Address:</b> Yashwant Complex Shop No 11, Lasalgaon 422306</p>
+    <p><b>Phone:</b> 9850752963</p><a class="whatsapp" href="#" onclick="sendWA()">Order on WhatsApp</a>
+
+  </div></div><div class="cart-btn" onclick="toggleCart()">🛒 Cart</div><div class="cart" id="cartBox">
   <h4>Cart</h4>
   <ul id="list"></ul>
   <p id="total">Total: ₹0</p>
-</div>
-
-<footer>
-  © 2026 Vishaldeep Medical & General Store
-</footer>
-
-<script>
+</div><footer>© 2026 Vishaldeep Medical & General Store</footer><script>
 let cart=[];
 
-function add(n,p){
-  cart.push({name:n,price:p});
-  render();
-}
+function add(n,p){cart.push({name:n,price:p});render();}
 
 function render(){
   let list=document.getElementById("list");
   list.innerHTML="";
   let total=0;
 
-  cart
+  cart.forEach(i=>{
+    let li=document.createElement("li");
+    li.innerText=i.name+" - ₹"+i.price;
+    list.appendChild(li);
+    total+=i.price;
+  });
+
+  document.getElementById("total").innerText="Total: ₹"+total;
+}
+
+function toggleCart(){
+  let box=document.getElementById("cartBox");
+  box.style.display = (box.style.display=="block") ? "none" : "block";
+}
+
+function sendWA(){
+  if(cart.length===0){alert("Cart is empty");return;}
+
+  let msg="Order from Vishaldeep Medical Store:\n\n";
+  cart.forEach(i=>msg+=i.name+" - ₹"+i.price+"\n");
+  msg+="\nTotal: ₹"+cart.reduce((a,b)=>a+b.price,0);
+
+  window.open("https://wa.me/919850752963?text="+encodeURIComponent(msg),"_blank");
+}
+</script></body>
+  </html>
