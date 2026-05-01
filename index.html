@@ -38,8 +38,6 @@ nav a {
     background:white;
 }
 
-.hero h2 { color:#0b6b3a; }
-
 .btn {
     display:inline-block;
     margin:10px;
@@ -71,7 +69,6 @@ nav a {
     padding:10px;
     border-radius:6px;
     border:1px solid #ccc;
-    font-size:16px;
 }
 
 .products {
@@ -111,63 +108,51 @@ footer {
     <p>Your trusted pharmacy</p>
 </header>
 
-<nav>
-    <a href="#">Home</a>
-    <a href="#">Medicines</a>
-    <a href="#">Contact</a>
-</nav>
-
 <section class="hero">
     <h2>Quality Medicines & Healthcare Services</h2>
-    <p>We care about your health</p>
 
-    <a href="https://wa.me/254786467783?text=Hello%20I%20want%20to%20book%20an%20appointment" class="btn btn1">
-        Book Appointment Today 📅
-    </a>
-
-    <a href="https://wa.me/254786467783?text=Hello%20I%20need%20to%20talk%20to%20a%20medical%20expert" class="btn btn2">
-        Talk to an Expert 💬
-    </a>
-
-    <a href="https://www.google.com/maps/search/?api=1&query=Vishaldeep+Medical+Store" target="_blank" class="btn btn3">
-        Get Directions 📍
-    </a>
+    <a href="https://wa.me/919850752963?text=Hello%20I%20want%20to%20book%20an%20appointment" class="btn btn1">Book Appointment 📅</a>
+    <a href="https://wa.me/919850752963?text=Hello%20I%20need%20to%20talk%20to%20an%20expert" class="btn btn2">Talk to Expert 💬</a>
+    <a href="https://www.google.com/maps/search/?api=1&query=Yashwant+Complex+Takali+Vinchur+Lasalgaon+422306" target="_blank" class="btn btn3">Get Directions 📍</a>
 </section>
 
 <div class="container">
     <h2>Available Medicines</h2>
 
-    <!-- SEARCH BAR -->
     <div class="search-box">
         <input type="text" id="searchInput" placeholder="Search for medicine...">
     </div>
 
-    <div class="products" id="productList">
+    <div class="products">
 
-        <div class="product"><img src="https://upload.wikimedia.org/wikipedia/commons/5/5f/Paracetamol-sample.jpg"><h4>Paracetamol</h4></div>
-        <div class="product"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6a/Amoxicillin_500mg_capsules.jpg"><h4>Amoxicillin</h4></div>
-        <div class="product"><img src="https://upload.wikimedia.org/wikipedia/commons/0/0f/Ibuprofen_tablets.jpg"><h4>Ibuprofen</h4></div>
-        <div class="product"><img src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Panadol.jpg"><h4>Panadol</h4></div>
-        <div class="product"><img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Vitamin_C_tablets.jpg"><h4>Vitamin C</h4></div>
-        <div class="product"><img src="https://upload.wikimedia.org/wikipedia/commons/1/1c/Cough_syrup.jpg"><h4>Cough Syrup</h4></div>
-        <div class="product"><img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Insulin_vial.jpg"><h4>Insulin</h4></div>
-        <div class="product"><img src="https://upload.wikimedia.org/wikipedia/commons/8/8c/Oral_rehydration_salts.jpg"><h4>ORS</h4></div>
-        <div class="product"><img src="https://upload.wikimedia.org/wikipedia/commons/9/92/Aspirin.jpg"><h4>Aspirin</h4></div>
-        <div class="product"><img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Antacid_tablets.jpg"><h4>Antacid</h4></div>
-        <div class="product"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a3/Antihistamine_tablets.jpg"><h4>Antihistamine</h4></div>
-        <div class="product"><img src="https://upload.wikimedia.org/wikipedia/commons/5/57/Zinc_tablets.jpg"><h4>Zinc Tablets</h4></div>
-        <div class="product"><img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Eye_drops.jpg"><h4>Eye Drops</h4></div>
-        <div class="product"><img src="https://upload.wikimedia.org/wikipedia/commons/3/33/Bandage.jpg"><h4>Bandages</h4></div>
-        <div class="product"><img src="https://upload.wikimedia.org/wikipedia/commons/0/0c/Hand_sanitizer.jpg"><h4>Hand Sanitizer</h4></div>
+        <!-- REAL IMAGE LINKS (UNSPLASH) -->
+        <div class="product"><img src="https://source.unsplash.com/300x200/?paracetamol,medicine"><h4>Paracetamol</h4></div>
+        <div class="product"><img src="https://source.unsplash.com/300x200/?antibiotic,capsule"><h4>Amoxicillin</h4></div>
+        <div class="product"><img src="https://source.unsplash.com/300x200/?ibuprofen,tablets"><h4>Ibuprofen</h4></div>
+        <div class="product"><img src="https://source.unsplash.com/300x200/?painkillers"><h4>Panadol</h4></div>
+        <div class="product"><img src="https://source.unsplash.com/300x200/?vitamin,c"><h4>Vitamin C</h4></div>
+        <div class="product"><img src="https://source.unsplash.com/300x200/?cough,syrup"><h4>Cough Syrup</h4></div>
+        <div class="product"><img src="https://source.unsplash.com/300x200/?insulin"><h4>Insulin</h4></div>
+        <div class="product"><img src="https://source.unsplash.com/300x200/?rehydration,salts"><h4>ORS</h4></div>
+        <div class="product"><img src="https://source.unsplash.com/300x200/?aspirin"><h4>Aspirin</h4></div>
+        <div class="product"><img src="https://source.unsplash.com/300x200/?antacid"><h4>Antacid</h4></div>
+        <div class="product"><img src="https://source.unsplash.com/300x200/?allergy,tablets"><h4>Antihistamine</h4></div>
+        <div class="product"><img src="https://source.unsplash.com/300x200/?zinc,supplement"><h4>Zinc Tablets</h4></div>
+        <div class="product"><img src="https://source.unsplash.com/300x200/?eye,drops"><h4>Eye Drops</h4></div>
+        <div class="product"><img src="https://source.unsplash.com/300x200/?bandage"><h4>Bandages</h4></div>
+        <div class="product"><img src="https://source.unsplash.com/300x200/?hand,sanitizer"><h4>Hand Sanitizer</h4></div>
 
     </div>
 </div>
 
 <footer>
-    <p>📞 0786467783 | 📍 Visit us today</p>
+    <p>
+        📍 Yashwant Complex Shop No 11, Takali Vinchur, Lasalgaon 422306 <br>
+        📞 9850752963 <br>
+        👤 Proprietor: Vishal Deepak Babre
+    </p>
 </footer>
 
-<!-- SEARCH SCRIPT -->
 <script>
 const searchInput = document.getElementById('searchInput');
 const products = document.querySelectorAll('.product');
@@ -183,4 +168,4 @@ searchInput.addEventListener('keyup', function() {
 </script>
 
 </body>
-      </html>
+    </html>
