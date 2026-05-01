@@ -1,206 +1,186 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>  <title>Vishaldeep Medical and General Store | Trusted Pharmacy</title>  <meta name="description" content="Vishaldeep Medical and General Store - Trusted pharmacy in Lasalgaon offering genuine medicines and WhatsApp ordering." />  <style>
-    body{margin:0;font-family:Arial;background:#f4f7fb;}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vishaldeep Medical & General Store</title>
 
-    header{
-      background:linear-gradient(135deg,#0b6b3a,#12a150);
-      color:white;
-      text-align:center;
-      padding:20px;
-      position:relative;
-    }
+<style>
+body {
+    margin:0;
+    font-family: 'Segoe UI', sans-serif;
+    background:#f4f7fb;
+}
 
-    .logo{
-      width:70px;height:70px;background:white;
-      color:#0b6b3a;border-radius:50%;
-      margin:auto;font-weight:bold;
-      display:flex;align-items:center;justify-content:center;
-      font-size:28px;
-    }
+header {
+    background: linear-gradient(135deg,#0b6b3a,#12a150);
+    color:white;
+    text-align:center;
+    padding:30px 15px;
+}
 
-    nav{background:#084d29;text-align:center;padding:10px;}
-    nav a{color:white;margin:10px;text-decoration:none;font-weight:bold;}
+nav {
+    background:#094d29;
+    padding:10px;
+    text-align:center;
+}
 
-    .container{max-width:1000px;margin:auto;padding:15px;}
+nav a {
+    color:white;
+    margin:0 15px;
+    text-decoration:none;
+    font-weight:bold;
+}
 
-    .card{
-      background:white;
-      padding:15px;
-      margin:10px 0;
-      border-radius:10px;
-      box-shadow:0 2px 8px rgba(0,0,0,0.1);
-    }
+.hero {
+    text-align:center;
+    padding:40px 20px;
+    background:white;
+}
 
-    .badge{
-      display:inline-block;
-      background:#e8f5e9;
-      color:#0b6b3a;
-      padding:5px 10px;
-      border-radius:20px;
-      margin:5px;
-      font-size:12px;
-    }
+.hero h2 { color:#0b6b3a; }
 
-    .products{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-      gap:10px;
-    }
+.btn {
+    display:inline-block;
+    margin:10px;
+    padding:12px 20px;
+    border-radius:6px;
+    color:white;
+    text-decoration:none;
+    font-weight:bold;
+}
 
-    .product{
-      border:1px solid #ddd;
-      padding:10px;
-      border-radius:10px;
-      text-align:center;
-      background:white;
-    }
+.btn1 { background:#0b6b3a; }
+.btn2 { background:#0077cc; }
+.btn3 { background:#d9534f; }
 
-    .product img{
-      width:100%;height:120px;object-fit:cover;border-radius:8px;
-    }
+.container {
+    max-width:1100px;
+    margin:auto;
+    padding:20px;
+}
 
-    button{
-      background:#0b6b3a;
-      color:white;
-      border:none;
-      padding:8px;
-      margin-top:5px;
-      border-radius:5px;
-      cursor:pointer;
-    }
+.search-box {
+    text-align:center;
+    margin-bottom:20px;
+}
 
-    .whatsapp{
-      background:#25D366;
-      padding:10px;
-      display:inline-block;
-      color:white;
-      border-radius:8px;
-      text-decoration:none;
-      margin-top:10px;
-    }
+.search-box input {
+    width:80%;
+    max-width:400px;
+    padding:10px;
+    border-radius:6px;
+    border:1px solid #ccc;
+    font-size:16px;
+}
 
-    .cart-btn{
-      position:fixed;
-      right:10px;
-      bottom:10px;
-      background:#0b6b3a;
-      color:white;
-      padding:10px 12px;
-      border-radius:50px;
-      cursor:pointer;
-      z-index:999;
-    }
+.products {
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:15px;
+}
 
-    .cart{
-      position:fixed;
-      right:10px;
-      bottom:60px;
-      background:white;
-      padding:10px;
-      width:240px;
-      box-shadow:0 0 10px rgba(0,0,0,0.2);
-      border-radius:10px;
-      display:none;
-      z-index:998;
-    }
+.product {
+    background:white;
+    padding:10px;
+    border-radius:10px;
+    text-align:center;
+    box-shadow:0 3px 10px rgba(0,0,0,0.1);
+}
 
-    footer{
-      text-align:center;
-      padding:15px;
-      background:#084d29;
-      color:white;
-    }
-  </style></head><body><header>
-  <div class="logo">✚</div>
-  <h1>Vishaldeep Medical Store</h1>
-  <p>Trusted Pharmacy & General Store</p>
-</header><nav>
-  <a href="#about">About</a>
-  <a href="#shop">Medicines</a>
-  <a href="#contact">Contact</a>
-</nav><div class="container">  <div class="card" id="about">
-    <h2>About Us</h2>
-    <p><b>Vishaldeep Medical and General Store</b> is a trusted pharmacy committed to providing genuine, affordable medicines with care and reliability.</p><div>
-  <span class="badge">✔ Genuine Medicines</span>
-  <span class="badge">✔ Affordable Prices</span>
-  <span class="badge">✔ Fast Service</span>
-  <span class="badge">✔ Trusted Local Pharmacy</span>
+.product img {
+    width:100%;
+    height:140px;
+    object-fit:cover;
+    border-radius:8px;
+}
+
+footer {
+    background:#0b6b3a;
+    color:white;
+    text-align:center;
+    padding:15px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>Vishaldeep Medical & General Store</h1>
+    <p>Your trusted pharmacy</p>
+</header>
+
+<nav>
+    <a href="#">Home</a>
+    <a href="#">Medicines</a>
+    <a href="#">Contact</a>
+</nav>
+
+<section class="hero">
+    <h2>Quality Medicines & Healthcare Services</h2>
+    <p>We care about your health</p>
+
+    <a href="https://wa.me/254786467783?text=Hello%20I%20want%20to%20book%20an%20appointment" class="btn btn1">
+        Book Appointment Today 📅
+    </a>
+
+    <a href="https://wa.me/254786467783?text=Hello%20I%20need%20to%20talk%20to%20a%20medical%20expert" class="btn btn2">
+        Talk to an Expert 💬
+    </a>
+
+    <a href="https://www.google.com/maps/search/?api=1&query=Vishaldeep+Medical+Store" target="_blank" class="btn btn3">
+        Get Directions 📍
+    </a>
+</section>
+
+<div class="container">
+    <h2>Available Medicines</h2>
+
+    <!-- SEARCH BAR -->
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search for medicine...">
+    </div>
+
+    <div class="products" id="productList">
+
+        <div class="product"><img src="https://upload.wikimedia.org/wikipedia/commons/5/5f/Paracetamol-sample.jpg"><h4>Paracetamol</h4></div>
+        <div class="product"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6a/Amoxicillin_500mg_capsules.jpg"><h4>Amoxicillin</h4></div>
+        <div class="product"><img src="https://upload.wikimedia.org/wikipedia/commons/0/0f/Ibuprofen_tablets.jpg"><h4>Ibuprofen</h4></div>
+        <div class="product"><img src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Panadol.jpg"><h4>Panadol</h4></div>
+        <div class="product"><img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Vitamin_C_tablets.jpg"><h4>Vitamin C</h4></div>
+        <div class="product"><img src="https://upload.wikimedia.org/wikipedia/commons/1/1c/Cough_syrup.jpg"><h4>Cough Syrup</h4></div>
+        <div class="product"><img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Insulin_vial.jpg"><h4>Insulin</h4></div>
+        <div class="product"><img src="https://upload.wikimedia.org/wikipedia/commons/8/8c/Oral_rehydration_salts.jpg"><h4>ORS</h4></div>
+        <div class="product"><img src="https://upload.wikimedia.org/wikipedia/commons/9/92/Aspirin.jpg"><h4>Aspirin</h4></div>
+        <div class="product"><img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Antacid_tablets.jpg"><h4>Antacid</h4></div>
+        <div class="product"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a3/Antihistamine_tablets.jpg"><h4>Antihistamine</h4></div>
+        <div class="product"><img src="https://upload.wikimedia.org/wikipedia/commons/5/57/Zinc_tablets.jpg"><h4>Zinc Tablets</h4></div>
+        <div class="product"><img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Eye_drops.jpg"><h4>Eye Drops</h4></div>
+        <div class="product"><img src="https://upload.wikimedia.org/wikipedia/commons/3/33/Bandage.jpg"><h4>Bandages</h4></div>
+        <div class="product"><img src="https://upload.wikimedia.org/wikipedia/commons/0/0c/Hand_sanitizer.jpg"><h4>Hand Sanitizer</h4></div>
+
+    </div>
 </div>
 
-<p>We focus on customer health, trust, and quality service for every prescription and medicine need.</p>
+<footer>
+    <p>📞 0786467783 | 📍 Visit us today</p>
+</footer>
 
-<p><b>Proprietor:</b> Vishal Deepak Babre</p>
+<!-- SEARCH SCRIPT -->
+<script>
+const searchInput = document.getElementById('searchInput');
+const products = document.querySelectorAll('.product');
 
-  </div>  <div class="card" id="shop">
-    <h2>Medicines (₹ INR)</h2><div class="products">
+searchInput.addEventListener('keyup', function() {
+    let filter = searchInput.value.toLowerCase();
 
-  <div class="product">
-    <img src="https://images.unsplash.com/photo-1587854692152-cbe660dbde88" />
-    <h3>Paracetamol</h3>
-    <p>₹15</p>
-    <button onclick="add('Paracetamol',15)">Add</button>
-  </div>
+    products.forEach(product => {
+        let text = product.innerText.toLowerCase();
+        product.style.display = text.includes(filter) ? "block" : "none";
+    });
+});
+</script>
 
-  <div class="product">
-    <img src="https://images.unsplash.com/photo-1584017911766-d451b3d0e843" />
-    <h3>Vitamin C</h3>
-    <p>₹60</p>
-    <button onclick="add('Vitamin C',60)">Add</button>
-  </div>
-
-  <div class="product">
-    <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae" />
-    <h3>Cough Syrup</h3>
-    <p>₹120</p>
-    <button onclick="add('Cough Syrup',120)">Add</button>
-  </div>
-
-</div>
-
-  </div>  <div class="card" id="contact">
-    <h2>Contact</h2>
-    <p><b>Address:</b> Yashwant Complex Shop No 11, Lasalgaon 422306</p>
-    <p><b>Phone:</b> 9850752963</p><a class="whatsapp" href="#" onclick="sendWA()">Order on WhatsApp</a>
-
-  </div></div><div class="cart-btn" onclick="toggleCart()">🛒 Cart</div><div class="cart" id="cartBox">
-  <h4>Cart</h4>
-  <ul id="list"></ul>
-  <p id="total">Total: ₹0</p>
-</div><footer>© 2026 Vishaldeep Medical & General Store</footer><script>
-let cart=[];
-
-function add(n,p){cart.push({name:n,price:p});render();}
-
-function render(){
-  let list=document.getElementById("list");
-  list.innerHTML="";
-  let total=0;
-
-  cart.forEach(i=>{
-    let li=document.createElement("li");
-    li.innerText=i.name+" - ₹"+i.price;
-    list.appendChild(li);
-    total+=i.price;
-  });
-
-  document.getElementById("total").innerText="Total: ₹"+total;
-}
-
-function toggleCart(){
-  let box=document.getElementById("cartBox");
-  box.style.display = (box.style.display=="block") ? "none" : "block";
-}
-
-function sendWA(){
-  if(cart.length===0){alert("Cart is empty");return;}
-
-  let msg="Order from Vishaldeep Medical Store:\n\n";
-  cart.forEach(i=>msg+=i.name+" - ₹"+i.price+"\n");
-  msg+="\nTotal: ₹"+cart.reduce((a,b)=>a+b.price,0);
-
-  window.open("https://wa.me/919850752963?text="+encodeURIComponent(msg),"_blank");
-}
-</script></body>
-  </html>
+</body>
+      </html>
