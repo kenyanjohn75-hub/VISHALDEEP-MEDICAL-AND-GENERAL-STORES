@@ -8,158 +8,62 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
-body {font-family: Arial; margin:0; background:#f5f5f5;}
+body{font-family:Arial;margin:0;background:#f5f5f5;}
 
-.header {
-    background: linear-gradient(135deg,#0a7d3c,#1e88e5);
-    color:white;
-    text-align:center;
-    padding:20px;
+.header{
+background:linear-gradient(135deg,#0a7d3c,#1e88e5);
+color:white;
+text-align:center;
+padding:20px;
 }
 
-.header img {
-    width:85px;
-    height:85px;
-    border-radius:50%;
-    background:white;
-    padding:6px;
-    margin-bottom:10px;
-}
+.actions{display:flex;gap:10px;padding:10px;}
+.actions button{flex:1;padding:12px;border:none;border-radius:10px;color:white;}
+.blue{background:#1976d2;}
+.green{background:#0a7d3c;}
+.gray{background:#555;}
 
-.actions {
-    display:flex;
-    gap:10px;
-    padding:10px;
-}
+.search{width:90%;margin:10px auto;display:block;padding:12px;border-radius:20px;}
 
-.actions button {
-    flex:1;
-    padding:12px;
-    border:none;
-    border-radius:10px;
-    color:white;
-}
+.products{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:10px;}
 
-.blue {background:#1976d2;}
-.green {background:#0a7d3c;}
-.gray {background:#555;}
+.product{background:white;padding:10px;border-radius:10px;text-align:center;}
 
-.search {
-    width:90%;
-    margin:10px auto;
-    display:block;
-    padding:12px;
-    border-radius:20px;
-    border:1px solid #ccc;
-}
+.product img{width:100%;height:120px;object-fit:cover;}
 
-.products {
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:10px;
-    padding:10px;
-}
+.price{color:#0a7d3c;font-weight:bold;}
 
-.product {
-    background:white;
-    padding:10px;
-    border-radius:10px;
-    text-align:center;
-    position:relative;
-}
+.big-btn{width:90%;margin:8px auto;display:block;padding:12px;border:none;border-radius:10px;}
 
-.product img {
-    width:100%;
-    height:120px;
-    object-fit:cover;
-}
-
-.price {font-weight:bold;color:#0a7d3c;}
-
-.rx {
-    position:absolute;
-    top:8px;
-    left:8px;
-    background:red;
-    color:white;
-    font-size:10px;
-    padding:3px 6px;
-    border-radius:5px;
-}
-
-.big-btn {
-    width:90%;
-    margin:8px auto;
-    display:block;
-    padding:12px;
-    border:none;
-    border-radius:10px;
-    font-size:16px;
-}
-
-.bottom-nav {
-    position:fixed;
-    bottom:0;
-    width:100%;
-    background:white;
-    display:flex;
-    justify-content:space-around;
-    padding:10px;
-    border-top:1px solid #ccc;
-}
-
-.float-wa {
-    position:fixed;
-    bottom:80px;
-    right:15px;
-    background:#25D366;
-    color:white;
-    padding:12px;
-    border-radius:50%;
-    font-size:20px;
-}
+.bottom-nav{position:fixed;bottom:0;width:100%;background:white;display:flex;justify-content:space-around;padding:10px;}
 </style>
 </head>
 
 <body>
 
 <div class="header">
-<img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Medical_cross_symbol.svg">
 <h2>Vishaldeep Medical Store</h2>
 <p>Trusted Pharmacy</p>
 </div>
 
 <div class="actions">
-<button class="blue" onclick="doctorHelp()">Doctor Help</button>
-<button class="green" onclick="showShop()">Shop Medicines</button>
+<button class="blue" onclick="doctorHelp()">Help</button>
+<button class="green" onclick="showShop()">Shop</button>
 <button class="gray" onclick="window.location.href='admin.html'">Admin</button>
 </div>
 
-<input class="search" placeholder="Search medicines..." onkeyup="search(this.value)">
+<input class="search" placeholder="Search..." onkeyup="search(this.value)">
 
 <div class="products" id="products"></div>
 
 <div id="cartBox" style="padding:10px;"></div>
-<h3 id="total" style="padding:10px;"></h3>
+<h3 id="total"></h3>
 
-<div style="text-align:center;padding:10px;">
-<h4>📲 Scan QR</h4>
-<img id="qrPreview" width="180">
-</div>
-
-<button class="big-btn green" onclick="checkout()">💬 WhatsApp Order</button>
-<button class="big-btn blue" onclick="downloadPDF()">⬇️ Download Receipt PDF</button>
-
-<div class="bottom-nav">
-<button onclick="showShop()">Shop</button>
-<button onclick="showCart()">Cart</button>
-</div>
-
-<div class="float-wa" onclick="doctorHelp()">💬</div>
+<button class="big-btn green" onclick="checkout()">WhatsApp Order</button>
+<button class="big-btn blue" onclick="downloadPDF()">Download Receipt</button>
 
 <script>
 
-/* PRODUCTS */
 let products = JSON.parse(localStorage.getItem("products")) || [];
 let cart = [];
 
@@ -169,10 +73,9 @@ let div=document.getElementById("products");
 div.innerHTML="";
 
 list.forEach((p,i)=>{
-if(p.stock > 0){
+if(p.stock>0){
 div.innerHTML+=`
 <div class="product">
-${p.rx?'<div class="rx">RX</div>':''}
 <img src="${p.img}">
 <h4>${p.name}</h4>
 <p class="price">₹${p.price}</p>
@@ -181,18 +84,15 @@ ${p.rx?'<div class="rx">RX</div>':''}
 </div>`;
 }
 });
-
-updateQR();
 }
 display(products);
 
-/* ADD TO CART */
+/* CART */
 function add(i){
 cart.push(products[i]);
 showCart();
 }
 
-/* CART */
 function showCart(){
 let div=document.getElementById("cartBox");
 let total=0;
@@ -204,72 +104,35 @@ div.innerHTML+=`<p>${i.name} - ₹${i.price}</p>`;
 });
 
 document.getElementById("total").innerText="Total: ₹"+total;
-updateQR();
 }
 
-/* SEARCH */
-function search(q){
-display(products.filter(p=>p.name.toLowerCase().includes(q.toLowerCase())));
-}
-
-/* SHOP RESET */
-function showShop(){
-products = JSON.parse(localStorage.getItem("products")) || [];
-display(products);
-}
-
-/* WHATSAPP */
-function doctorHelp(){
-window.open("https://wa.me/919850752963","_blank");
-}
-
-/* QR */
-function getQR(){
-return "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data="+encodeURIComponent(window.location.href);
-}
-
-function updateQR(){
-document.getElementById("qrPreview").src=getQR();
-}
-
-/* CHECKOUT + SALES + STOCK DEDUCTION */
+/* CHECKOUT + STOCK + SALES */
 function checkout(){
 
 if(cart.length===0)return alert("Cart empty");
 
-let msg="VISHALDEEP MEDICAL ORDER\n\n";
+let msg="ORDER\n\n";
 let total=0;
 
-let products = JSON.parse(localStorage.getItem("products")) || [];
 let sales = JSON.parse(localStorage.getItem("sales")) || [];
+let products = JSON.parse(localStorage.getItem("products")) || [];
 
-cart.forEach((i,n)=>{
-msg+=(n+1)+". "+i.name+" - ₹"+i.price+"\n";
+cart.forEach(i=>{
+msg+=i.name+" - ₹"+i.price+"\n";
 total+=Number(i.price);
 
-/* stock deduction */
 let p = products.find(x=>x.name===i.name);
-if(p && p.stock>0){
-p.stock = Number(p.stock) - 1;
-}
+if(p) p.stock -= 1;
 });
 
-/* save stock */
+sales.push({date:new Date().toLocaleString(),items:cart,total:total});
+
+localStorage.setItem("sales",JSON.stringify(sales));
 localStorage.setItem("products",JSON.stringify(products));
 
-/* save sales */
-sales.push({
-date:new Date().toLocaleString(),
-items:cart,
-total:total
-});
-localStorage.setItem("sales",JSON.stringify(sales));
-
 cart=[];
-showCart();
 display(products);
-
-msg+="\nTOTAL: ₹"+total;
+showCart();
 
 window.open("https://wa.me/919850752963?text="+encodeURIComponent(msg));
 }
@@ -282,25 +145,13 @@ if(cart.length===0)return alert("Cart empty");
 const { jsPDF } = window.jspdf;
 let doc=new jsPDF();
 
-let y=10,total=0;
+doc.text("VISHALDEEP MEDICAL STORE",10,10);
 
-doc.addImage("https://upload.wikimedia.org/wikipedia/commons/4/4e/Medical_cross_symbol.svg","PNG",85,y,30,30);
-y+=35;
+let y=20,total=0;
 
-doc.setFontSize(16);
-doc.text("VISHALDEEP MEDICAL STORE",10,y);
-y+=8;
-
-doc.setFontSize(11);
-doc.text("WhatsApp: +91 98507 52963",10,y);y+=6;
-doc.text("Proprietor: Vishal Deepak Babre",10,y);y+=6;
-
-doc.text("Yashwant Complex, Shop No 11",10,y);y+=5;
-doc.text("Lasalgaon - 422306",10,y);y+=8;
-
-cart.forEach((i,n)=>{
-doc.text(`${n+1}. ${i.name} - ₹${i.price}`,10,y);
-y+=7;
+cart.forEach(i=>{
+doc.text(i.name+" - ₹"+i.price,10,y);
+y+=10;
 total+=Number(i.price);
 });
 
@@ -309,7 +160,22 @@ doc.text("TOTAL: ₹"+total,10,y+10);
 doc.save("receipt.pdf");
 }
 
+/* SEARCH */
+function search(q){
+display(products.filter(p=>p.name.toLowerCase().includes(q.toLowerCase())));
+}
+
+function showShop(){
+products = JSON.parse(localStorage.getItem("products")) || [];
+display(products);
+}
+
+/* HELP */
+function doctorHelp(){
+window.open("https://wa.me/919850752963");
+}
+
 </script>
 
 </body>
-  </html>
+</html>
