@@ -8,7 +8,7 @@
 <style>
 body {font-family: Arial; margin:0; background:#f5f5f5;}
 
-/* HERO */
+/* HEADER */
 .header {
     background: linear-gradient(135deg,#0a7d3c,#1e88e5);
     color:white;
@@ -108,8 +108,19 @@ body {font-family: Arial; margin:0; background:#f5f5f5;}
 }
 
 /* CART */
-.cart-box {
+.cart {
     padding:10px;
+}
+
+/* BUTTONS */
+.big-btn {
+    width:90%;
+    margin:8px auto;
+    display:block;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    font-size:16px;
 }
 
 /* FLOAT WA */
@@ -168,10 +179,12 @@ body {font-family: Arial; margin:0; background:#f5f5f5;}
 <div class="products" id="products"></div>
 
 <!-- CART -->
-<div class="cart-box" id="cartBox"></div>
+<div class="cart" id="cartBox"></div>
 <h3 style="padding:10px;" id="total"></h3>
 
-<button class="green" style="margin:10px;" onclick="checkout()">Buy via WhatsApp</button>
+<!-- PAY + PRINT -->
+<button class="big-btn green" onclick="checkout()">💳 Pay Now (WhatsApp Order)</button>
+<button class="big-btn gray" onclick="printReceipt()">🧾 Print Receipt</button>
 
 <!-- NAV -->
 <div class="bottom-nav">
@@ -187,7 +200,6 @@ body {font-family: Arial; margin:0; background:#f5f5f5;}
 
 <script>
 
-/* PRODUCTS */
 const products = [
 {name:"Paracetamol 650mg", price:28, rx:false},
 {name:"Ibuprofen 400mg", price:35, rx:false},
@@ -211,7 +223,7 @@ ${p.rx?'<div class="rx">RX</div>':''}
 <img src="https://via.placeholder.com/150">
 <h4>${p.name}</h4>
 <p class="price">₹${p.price}</p>
-<button onclick="add('${p.name}',${p.price})">Buy</button>
+<button onclick="add('${p.name}',${p.price})">Add</button>
 </div>`;
 });
 }
@@ -255,29 +267,61 @@ document.getElementById("rxUpload").click();
 function handleUpload(e){
 let file=e.target.files[0];
 if(file){
-alert("Prescription uploaded: "+file.name);
+alert("Uploaded: "+file.name);
 }
 }
 
-/* WHATSAPP */
+/* WHATSAPP DOCTOR */
 function doctorHelp(){
 window.open("https://wa.me/919850752963","_blank");
 }
 
-/* CHECKOUT PRO */
+/* PAY NOW (FULL ORDER) */
 function checkout(){
-let msg="🧾 Vishaldeep Medical Store Order%0A%0A";
+
+if(cart.length===0){
+alert("Cart is empty");
+return;
+}
+
+let msg="🧾 *Vishaldeep Medical Store Order*%0A%0A";
 let total=0;
 
 cart.forEach((i,index)=>{
-msg += (index+1)+". "+i.name+" - ₹"+i.price+"%0A";
-total += i.price;
+msg+=(index+1)+". "+i.name+" - ₹"+i.price+"%0A";
+total+=i.price;
 });
 
-msg += "%0A💰 Total: ₹"+total;
-msg += "%0A%0A📍 Please confirm my order.";
+msg+="%0A💰 *Total: ₹"+total+"*";
+msg+="%0A%0A📍 Please confirm order & payment.";
 
-window.open("https://wa.me/919850752963?text="+encodeURIComponent(msg), "_blank");
+window.open(
+"https://wa.me/919850752963?text="+encodeURIComponent(msg),
+"_blank"
+);
+}
+
+/* PRINT RECEIPT */
+function printReceipt(){
+
+if(cart.length===0){
+alert("Cart is empty");
+return;
+}
+
+let text="VISHALDEEP MEDICAL STORE\n\n";
+let total=0;
+
+cart.forEach((i,index)=>{
+text+=(index+1)+". "+i.name+" - ₹"+i.price+"\n";
+total+=i.price;
+});
+
+text+="\nTOTAL: ₹"+total;
+
+let w=window.open("");
+w.document.write("<pre>"+text+"</pre>");
+w.print();
 }
 
 /* LANGUAGE */
@@ -299,4 +343,4 @@ setLang("en");
 </script>
 
 </body>
-</html>
+    </html>
