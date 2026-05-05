@@ -5,8 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Vishaldeep Medical Store</title>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
 <style>
 body{font-family:Arial;margin:0;background:#f5f5f5;}
 
@@ -17,188 +15,193 @@ text-align:center;
 padding:20px;
 }
 
-.actions{display:flex;gap:10px;padding:10px;}
-.actions button{flex:1;padding:12px;border:none;border-radius:10px;color:white;}
-.blue{background:#1976d2;}
-.green{background:#0a7d3c;}
-.gray{background:#555;}
+.header img{
+width:70px;
+height:70px;
+border-radius:50%;
+background:white;
+padding:5px;
+}
 
-.search{width:90%;margin:10px auto;display:block;padding:12px;border-radius:20px;}
+.lang{
+display:flex;
+justify-content:center;
+gap:10px;
+padding:10px;
+background:#eee;
+}
 
-.products{
-display:grid;
-grid-template-columns:repeat(2,1fr);
+.lang button{
+padding:6px 12px;
+border:none;
+border-radius:20px;
+}
+
+.actions{
+display:flex;
 gap:10px;
 padding:10px;
 }
 
-.product{
+.actions button{
+flex:1;
+padding:12px;
+border:none;
+border-radius:10px;
+color:white;
+}
+
+.blue{background:#1976d2;}
+.green{background:#0a7d3c;}
+.gray{background:#555;}
+
+.upload-box{
 background:white;
+margin:10px;
 padding:10px;
 border-radius:10px;
 text-align:center;
 }
 
-.product img{
-width:100%;
-height:120px;
-object-fit:cover;
-}
-
-.price{color:#0a7d3c;font-weight:bold;}
-
-.bottom-nav{
-position:fixed;
-bottom:0;
-width:100%;
-background:white;
-display:flex;
-justify-content:space-around;
-padding:10px;
+footer{
+background:#222;
+color:white;
+padding:15px;
+text-align:center;
+font-size:13px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="header">
-<h2>Vishaldeep Medical Store</h2>
-<p>Trusted Pharmacy</p>
+<!-- LANGUAGE SWITCH -->
+<div class="lang">
+<button onclick="setLang('en')">English</button>
+<button onclick="setLang('hi')">हिंदी</button>
+<button onclick="setLang('mr')">मराठी</button>
 </div>
 
+<!-- HEADER -->
+<div class="header">
+<img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Medical_cross_symbol.svg">
+<h2 id="title">Vishaldeep Medical Store</h2>
+<p id="subtitle">Trusted Pharmacy & Healthcare</p>
+</div>
+
+<!-- ACTIONS -->
 <div class="actions">
-<button class="blue" onclick="doctorHelp()">Help</button>
-<button class="green" onclick="showShop()">Shop</button>
+<button class="blue" id="docBtn" onclick="consultDoctor()">Consult Doctor</button>
+<button class="green" onclick="document.getElementById('rxFile').click()" id="uploadBtn">Upload Prescription</button>
 <button class="gray" onclick="window.location.href='admin.html'">Admin</button>
 </div>
 
-<input class="search" placeholder="Search medicines..." onkeyup="search(this.value)">
+<!-- UPLOAD -->
+<div class="upload-box">
+<h3 id="uploadTitle">Upload Prescription</h3>
 
-<div class="products" id="products"></div>
+<input type="file" id="rxFile" accept="image/*,application/pdf">
 
-<div id="cartBox" style="padding:10px;"></div>
-<h3 id="total"></h3>
+<p id="fileName"></p>
 
-<button style="width:90%;margin:10px;" onclick="checkout()">WhatsApp Order</button>
-<button style="width:90%;margin:10px;background:#1976d2;color:white;" onclick="downloadPDF()">Download PDF</button>
+<button onclick="sendPrescription()" id="sendBtn"
+style="padding:10px;background:#0a7d3c;color:white;border:none;border-radius:8px;">
+Send to WhatsApp
+</button>
+</div>
+
+<!-- FOOTER -->
+<footer>
+<b id="storeName">Vishaldeep Medical and General Store</b><br><br>
+
+📍 <span id="address">
+Yashwant Complex Shop No 11, Takali Vinchur, Lasalgaon - 422306
+</span><br><br>
+
+📞 WhatsApp: +91 9850752963<br>
+👤 <span id="owner">Proprietor: Vishal Deepak Babre</span>
+</footer>
 
 <script>
 
-let products = JSON.parse(localStorage.getItem("products")) || [];
-let cart = [];
+let rxFile = null;
 
-/* DISPLAY */
-function display(list){
-let div=document.getElementById("products");
-div.innerHTML="";
-
-list.forEach((p,i)=>{
-if(p.stock>0){
-div.innerHTML+=`
-<div class="product">
-<img src="${p.img}">
-<h4>${p.name}</h4>
-<p class="price">₹${p.price}</p>
-<p>Stock: ${p.stock}</p>
-<button onclick="add(${i})">Add</button>
-</div>`;
+/* LANGUAGE DATA */
+const lang = {
+en:{
+title:"Vishaldeep Medical Store",
+subtitle:"Trusted Pharmacy & Healthcare",
+doc:"Consult Doctor",
+upload:"Upload Prescription",
+send:"Send to WhatsApp",
+uploadTitle:"Upload Prescription",
+store:"Vishaldeep Medical and General Store",
+address:"Yashwant Complex Shop No 11, Takali Vinchur, Lasalgaon - 422306",
+owner:"Proprietor: Vishal Deepak Babre"
+},
+hi:{
+title:"विशालदीप मेडिकल स्टोर",
+subtitle:"विश्वसनीय फार्मेसी और स्वास्थ्य सेवा",
+doc:"डॉक्टर से परामर्श",
+upload:"प्रिस्क्रिप्शन अपलोड करें",
+send:"व्हाट्सएप पर भेजें",
+uploadTitle:"प्रिस्क्रिप्शन अपलोड करें",
+store:"विशालदीप मेडिकल एंड जनरल स्टोर",
+address:"यशवंत कॉम्प्लेक्स शॉप नं 11, टाकली विंचूर, लासलगाव - 422306",
+owner:"प्रोप्राइटर: विशाल दीपक बाबरे"
+},
+mr:{
+title:"विशालदीप मेडिकल स्टोअर",
+subtitle:"विश्वसनीय फार्मसी आणि आरोग्य सेवा",
+doc:"डॉक्टर सल्ला",
+upload:"प्रिस्क्रिप्शन अपलोड करा",
+send:"व्हाट्सअॅप वर पाठवा",
+uploadTitle:"प्रिस्क्रिप्शन अपलोड करा",
+store:"विशालदीप मेडिकल आणि जनरल स्टोअर",
+address:"यशवंत कॉम्प्लेक्स शॉप नं 11, टाकळी विंचूर, लासलगाव - 422306",
+owner:"प्रोप्रायटर: विशाल दीपक बाबरे"
 }
-});
-}
-display(products);
+};
 
-/* CART */
-function add(i){
-cart.push(products[i]);
-showCart();
-}
-
-function showCart(){
-let div=document.getElementById("cartBox");
-let total=0;
-div.innerHTML="";
-
-cart.forEach(i=>{
-total+=Number(i.price);
-div.innerHTML+=`<p>${i.name} - ₹${i.price}</p>`;
-});
-
-document.getElementById("total").innerText="Total: ₹"+total;
+/* SET LANGUAGE */
+function setLang(l){
+document.getElementById("title").innerText=lang[l].title;
+document.getElementById("subtitle").innerText=lang[l].subtitle;
+document.getElementById("docBtn").innerText=lang[l].doc;
+document.getElementById("uploadBtn").innerText=lang[l].upload;
+document.getElementById("sendBtn").innerText=lang[l].send;
+document.getElementById("uploadTitle").innerText=lang[l].uploadTitle;
+document.getElementById("storeName").innerText=lang[l].store;
+document.getElementById("address").innerText=lang[l].address;
+document.getElementById("owner").innerText=lang[l].owner;
 }
 
-/* CHECKOUT */
-function checkout(){
+/* DEFAULT LANGUAGE */
+setLang('en');
 
-if(cart.length===0)return alert("Cart empty");
-
-let msg="VISHALDEEP MEDICAL ORDER\n\n";
-let total=0;
-
-let products = JSON.parse(localStorage.getItem("products")) || [];
-let sales = JSON.parse(localStorage.getItem("sales")) || [];
-
-cart.forEach(i=>{
-msg+=i.name+" - ₹"+i.price+"\n";
-total+=Number(i.price);
-
-let p = products.find(x=>x.name===i.name);
-if(p && p.stock>0){
-p.stock -= 1;
+/* DOCTOR */
+function consultDoctor(){
+window.open("https://wa.me/919850752963?text=Doctor%20Consultation%20Request","_blank");
 }
-});
 
-localStorage.setItem("products",JSON.stringify(products));
-
-sales.push({
-date:new Date().toLocaleString(),
-items:cart,
-total:total
+/* FILE */
+document.getElementById("rxFile").addEventListener("change",function(e){
+rxFile = e.target.files[0];
+document.getElementById("fileName").innerText = rxFile.name;
 });
 
-localStorage.setItem("sales",JSON.stringify(sales));
-
-cart=[];
-showCart();
-display(products);
-
-window.open("https://wa.me/919850752963?text="+encodeURIComponent(msg));
+/* SEND */
+function sendPrescription(){
+if(!rxFile){
+alert("Upload prescription first");
+return;
 }
 
-/* PDF */
-function downloadPDF(){
-
-if(cart.length===0)return alert("Cart empty");
-
-const { jsPDF } = window.jspdf;
-let doc=new jsPDF();
-
-doc.text("VISHALDEEP MEDICAL STORE",10,10);
-
-let y=20,total=0;
-
-cart.forEach(i=>{
-doc.text(i.name+" - ₹"+i.price,10,y);
-y+=10;
-total+=Number(i.price);
-});
-
-doc.text("TOTAL: ₹"+total,10,y+10);
-
-doc.save("receipt.pdf");
-}
-
-/* SEARCH */
-function search(q){
-display(products.filter(p=>p.name.toLowerCase().includes(q.toLowerCase())));
-}
-
-function showShop(){
-products = JSON.parse(localStorage.getItem("products")) || [];
-display(products);
-}
-
-function doctorHelp(){
-window.open("https://wa.me/919850752963");
+window.open(
+"https://wa.me/919850752963?text=" +
+encodeURIComponent("📄 Prescription uploaded. Please check and suggest medicines."),
+"_blank"
+);
 }
 
 </script>
