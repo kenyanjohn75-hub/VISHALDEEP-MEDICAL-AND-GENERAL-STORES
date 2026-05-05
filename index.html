@@ -1,237 +1,65 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vishaldeep Medical Store</title>
+<title>Medical Store</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
-body {font-family: Arial; margin:0; background:#f5f5f5;}
-
-.header {
-    background: linear-gradient(135deg,#0a7d3c,#1e88e5);
-    color:white;
-    text-align:center;
-    padding:20px;
-}
-
-.header img {
-    width:85px;
-    height:85px;
-    border-radius:50%;
-    background:white;
-    padding:6px;
-    margin-bottom:10px;
-}
-
-.lang {
-    display:flex;
-    justify-content:center;
-    gap:10px;
-    padding:10px;
-    background:#eee;
-}
-
-.lang button {
-    padding:6px 12px;
-    border:none;
-    border-radius:20px;
-}
-
-.search {
-    width:90%;
-    margin:10px auto;
-    display:block;
-    padding:12px;
-    border-radius:20px;
-    border:1px solid #ccc;
-}
-
-.actions {
-    display:flex;
-    gap:10px;
-    padding:10px;
-}
-
-.actions button {
-    flex:1;
-    padding:12px;
-    border:none;
-    border-radius:10px;
-    color:white;
-}
-
-.blue {background:#1976d2;}
-.green {background:#0a7d3c;}
-.gray {background:#555;}
-
-.products {
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:10px;
-    padding:10px;
-}
-
-.product {
-    background:white;
-    padding:10px;
-    border-radius:10px;
-    text-align:center;
-    position:relative;
-}
-
-.product img {
-    width:100%;
-    height:120px;
-    object-fit:cover;
-}
-
-.price {font-weight:bold;color:#0a7d3c;}
-
-.rx {
-    position:absolute;
-    top:8px;
-    left:8px;
-    background:red;
-    color:white;
-    font-size:10px;
-    padding:3px 6px;
-    border-radius:5px;
-}
-
-.big-btn {
-    width:90%;
-    margin:8px auto;
-    display:block;
-    padding:12px;
-    border:none;
-    border-radius:10px;
-    font-size:16px;
-}
-
-.bottom-nav {
-    position:fixed;
-    bottom:0;
-    width:100%;
-    background:white;
-    display:flex;
-    justify-content:space-around;
-    padding:10px;
-    border-top:1px solid #ccc;
-}
-
-.float-wa {
-    position:fixed;
-    bottom:80px;
-    right:15px;
-    background:#25D366;
-    color:white;
-    padding:12px;
-    border-radius:50%;
-}
+body{font-family:Arial;margin:0;background:#f5f5f5;}
+.header{background:#0a7d3c;color:white;text-align:center;padding:20px;}
+.products{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:10px;}
+.product{background:white;padding:10px;border-radius:10px;text-align:center;}
+.product img{width:100%;height:120px;object-fit:cover;}
+button{padding:8px;border:none;border-radius:8px;}
+.green{background:#0a7d3c;color:white;}
+.blue{background:#1976d2;color:white;}
 </style>
 </head>
 
 <body>
 
 <div class="header">
-<img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Medical_cross_symbol.svg">
 <h2>Vishaldeep Medical Store</h2>
-<p>Trusted Pharmacy</p>
 </div>
 
-<div class="actions">
-<button class="blue" onclick="showShop()">Shop</button>
-<button class="green" onclick="doctorHelp()">WhatsApp</button>
-<button class="gray" onclick="openAdmin()">Admin</button>
-</div>
-
-<div style="display:flex;gap:8px;padding:10px;overflow:auto;">
-<button onclick="filterCategory('All')">All</button>
-<button onclick="filterCategory('Pain Relief')">Pain Relief</button>
-<button onclick="filterCategory('Cough & Cold')">Cough</button>
-<button onclick="filterCategory('Antibiotics')">Antibiotics</button>
-<button onclick="filterCategory('Vitamins')">Vitamins</button>
-</div>
-
-<input class="search" placeholder="Search medicines..." onkeyup="search(this.value)">
-
-<div class="products" id="products"></div>
+<div id="products" class="products"></div>
 
 <div id="cartBox" style="padding:10px;"></div>
-<h3 style="padding:10px;" id="total"></h3>
+<h3 id="total" style="padding:10px;"></h3>
 
-<div style="text-align:center;padding:10px;">
-<h4>📲 Scan QR</h4>
-<img id="qrPreview" width="180">
-</div>
-
-<button class="big-btn green" onclick="checkout()">💬 WhatsApp Order</button>
-<button class="big-btn blue" onclick="downloadPDF()">⬇️ Download Receipt PDF</button>
-
-<!-- ADMIN -->
-<div id="adminPanel" style="display:none;padding:10px;background:#fff;margin:10px;border-radius:10px;">
-<h3>🔐 Admin Dashboard</h3>
-
-<input type="password" id="adminPass" placeholder="Enter password">
-<button onclick="loginAdmin()">Login</button>
-
-<div id="adminArea" style="display:none;margin-top:10px;"></div>
-</div>
-
-<div class="bottom-nav">
-<button onclick="showShop()">Shop</button>
-<button onclick="showCart()">Cart</button>
-</div>
-
-<div class="float-wa" onclick="doctorHelp()">💬</div>
+<button class="green" onclick="checkout()">WhatsApp Order</button>
+<button class="blue" onclick="downloadPDF()">Download PDF</button>
 
 <script>
 
-/* PRODUCTS (with stock memory) */
-let products = JSON.parse(localStorage.getItem("products")) || [
-{name:"Panadol",price:30,rx:false,category:"Pain Relief",stock:true,img:"https://www.panadol.com/content/dam/cf-consumer-healthcare/panadol/en_IN/products/panadol-advance-500mg.png"},
-{name:"Brufen",price:40,rx:false,category:"Pain Relief",stock:true,img:"https://www.mims.com/resources/drug/IN/image/brufen.jpg"},
-{name:"Benylin Syrup",price:120,rx:false,category:"Cough & Cold",stock:true,img:"https://www.benylin.com/content/dam/cf-consumer-healthcare/benylin/en_IN/products/benylin-cough-syrup.png"},
-{name:"Augmentin",price:150,rx:true,category:"Antibiotics",stock:false,img:"https://www.gsk.com/media/5920/augmentin-tablets.jpg"},
-{name:"Azithral",price:180,rx:true,category:"Antibiotics",stock:true,img:"https://www.ale.mb.ca/wp-content/uploads/2019/08/azithromycin.jpg"},
-{name:"Limcee",price:110,rx:false,category:"Vitamins",stock:true,img:"https://www.1mg.com/images/products/limcee-vitamin-c-tablet.jpg"}
-];
+let products = JSON.parse(localStorage.getItem("products")) || [];
 
-let cart=[];
+let cart = [];
 
-/* DISPLAY */
-function display(list){
+function display(){
 let div=document.getElementById("products");
 div.innerHTML="";
 
-list.forEach(p=>{
+products.forEach((p,i)=>{
+if(p.stock>0){
 div.innerHTML+=`
 <div class="product">
-${p.rx?'<div class="rx">RX</div>':''}
 <img src="${p.img}">
 <h4>${p.name}</h4>
-<p>${p.category}</p>
-<p class="price">₹${p.price}</p>
-
-<button ${!p.stock?'disabled':''}
-onclick="add('${p.name}',${p.price})">
-${p.stock?'Add':'Out'}
-</button>
-
+<p>₹${p.price}</p>
+<p>Qty: ${p.stock}</p>
+<button onclick="add(${i})">Add</button>
 </div>`;
-});
-updateQR();
 }
-display(products);
+});
+}
+display();
 
-/* CART */
-function add(name,price){
-let item=products.find(p=>p.name===name);
-if(item && !item.stock){alert("Out of stock");return;}
-cart.push({name,price});
+function add(i){
+cart.push(products[i]);
 showCart();
 }
 
@@ -241,144 +69,47 @@ let total=0;
 div.innerHTML="";
 
 cart.forEach(i=>{
-total+=i.price;
+total+=Number(i.price);
 div.innerHTML+=`<p>${i.name} - ₹${i.price}</p>`;
 });
 
 document.getElementById("total").innerText="Total: ₹"+total;
-updateQR();
 }
 
-/* SEARCH + FILTER */
-function search(q){
-display(products.filter(p=>p.name.toLowerCase().includes(q.toLowerCase())));
-}
-
-function filterCategory(c){
-if(c==="All")return display(products);
-display(products.filter(p=>p.category===c));
-}
-
-function showShop(){display(products);}
-
-/* WHATSAPP */
-function doctorHelp(){
-window.open("https://wa.me/919850752963","_blank");
-}
-
-/* CHECKOUT */
 function checkout(){
-if(cart.length===0)return alert("Cart empty");
-
-let msg="ORDER\n";
+let msg="Order:\n";
 let total=0;
 
 cart.forEach((i,n)=>{
 msg+=(n+1)+". "+i.name+" - ₹"+i.price+"\n";
-total+=i.price;
+total+=Number(i.price);
 });
 
-msg+="TOTAL: ₹"+total;
+msg+="Total: "+total;
+
 window.open("https://wa.me/919850752963?text="+encodeURIComponent(msg));
 }
 
-/* QR */
-function getQR(){
-return "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data="+encodeURIComponent(window.location.href);
-}
-
-function updateQR(){
-document.getElementById("qrPreview").src=getQR();
-}
-
-/* PDF RECEIPT (FULL BUSINESS INVOICE) */
 function downloadPDF(){
-
-if(cart.length===0){alert("Cart empty");return;}
-
 const { jsPDF } = window.jspdf;
 let doc=new jsPDF();
 
-let y=10,total=0;
+doc.text("VISHALDEEP MEDICAL STORE",10,10);
 
-/* LOGO */
-let logo="https://upload.wikimedia.org/wikipedia/commons/4/4e/Medical_cross_symbol.svg";
-doc.addImage(logo,"PNG",85,y,30,30);
-y+=35;
+let y=20,total=0;
 
-/* HEADER */
-doc.setFontSize(16);
-doc.text("VISHALDEEP MEDICAL & GENERAL STORE",10,y);
-y+=8;
-
-doc.setFontSize(11);
-doc.text("WhatsApp: +91 98507 52963",10,y);y+=6;
-doc.text("Mobile: 9850752963",10,y);y+=6;
-doc.text("Proprietor: Vishal Deepak Babre",10,y);y+=6;
-
-doc.text("Yashwant Complex, Shop No 11,",10,y);y+=5;
-doc.text("Takali Vinchur, Lasalgaon - 422306",10,y);y+=8;
-
-doc.text("------------------------------",10,y);y+=8;
-
-/* ITEMS */
 cart.forEach((i,n)=>{
 doc.text(`${n+1}. ${i.name} - ₹${i.price}`,10,y);
-y+=7;
-total+=i.price;
+y+=10;
+total+=Number(i.price);
 });
 
-doc.text("------------------------------",10,y);y+=8;
+doc.text("TOTAL: "+total,10,y+10);
 
-/* TOTAL */
-doc.setFontSize(13);
-doc.text("TOTAL: ₹"+total,10,y);y+=10;
-
-/* QR */
-doc.text("Scan QR:",10,y);
-y+=5;
-doc.addImage(getQR(),"PNG",10,y,50,50);
-
-/* SAVE */
-doc.save("Medical_Receipt.pdf");
-}
-
-/* ADMIN */
-function openAdmin(){
-document.getElementById("adminPanel").style.display="block";
-}
-
-function loginAdmin(){
-if(document.getElementById("adminPass").value!=="1234")
-return alert("Wrong password");
-
-document.getElementById("adminArea").style.display="block";
-renderAdmin();
-}
-
-function renderAdmin(){
-let d=document.getElementById("adminArea");
-d.innerHTML="";
-
-products.forEach((p,i)=>{
-d.innerHTML+=`
-<div style="border:1px solid #ddd;padding:8px;margin:5px;">
-<b>${p.name}</b><br>
-<label>
-<input type="checkbox" ${p.stock?'checked':''}
-onchange="toggleStock(${i})"> In Stock
-</label>
-</div>`;
-});
-}
-
-function toggleStock(i){
-products[i].stock=!products[i].stock;
-localStorage.setItem("products",JSON.stringify(products));
-display(products);
+doc.save("receipt.pdf");
 }
 
 </script>
 
 </body>
-    </html>
+</html>
