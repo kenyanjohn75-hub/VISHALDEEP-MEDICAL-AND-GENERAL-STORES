@@ -2,10 +2,10 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Admin Panel</title>
+<title>Admin Dashboard</title>
 
 <style>
-body{font-family:Arial;background:#f5f5f5;}
+body{font-family:Arial;background:#f5f5f5;margin:0;}
 .box{background:white;margin:10px;padding:10px;border-radius:10px;}
 input{width:90%;padding:8px;margin:5px;}
 button{padding:10px;background:#0a7d3c;color:white;border:none;}
@@ -26,11 +26,16 @@ button{padding:10px;background:#0a7d3c;color:white;border:none;}
 
 <div class="box">
 <h3>Add Product</h3>
+
 <input id="name" placeholder="Name">
 <input id="price" placeholder="Price">
 <input id="stock" placeholder="Stock">
-<input id="img" placeholder="Image URL">
-<button onclick="add()">Add</button>
+
+<input type="file" id="imgFile" accept="image/*">
+<br>
+<img id="preview" style="width:100px;margin-top:5px;">
+
+<button onclick="add()">Add Product</button>
 </div>
 
 <div class="box">
@@ -39,7 +44,7 @@ button{padding:10px;background:#0a7d3c;color:white;border:none;}
 </div>
 
 <div class="box">
-<h3>Sales Dashboard</h3>
+<h3>📊 Sales Dashboard</h3>
 <div id="sales"></div>
 </div>
 
@@ -49,7 +54,9 @@ button{padding:10px;background:#0a7d3c;color:white;border:none;}
 
 let products = JSON.parse(localStorage.getItem("products")) || [];
 let sales = JSON.parse(localStorage.getItem("sales")) || [];
+let base64Image = "";
 
+/* LOGIN */
 function login(){
 if(document.getElementById("pass").value==="1234"){
 document.getElementById("panel").style.display="block";
@@ -58,20 +65,41 @@ loadSales();
 }else alert("Wrong password");
 }
 
+/* IMAGE UPLOAD */
+document.getElementById("imgFile").addEventListener("change",function(e){
+let file = e.target.files[0];
+let reader = new FileReader();
+
+reader.onload=function(){
+base64Image = reader.result;
+document.getElementById("preview").src = base64Image;
+};
+
+reader.readAsDataURL(file);
+});
+
+/* ADD PRODUCT */
 function add(){
 
 products.push({
 name:name.value,
-price:price.value,
-stock:stock.value,
-img:img.value
+price:Number(price.value),
+stock:Number(stock.value),
+img:base64Image
 });
 
 localStorage.setItem("products",JSON.stringify(products));
+
+base64Image="";
+preview.src="";
+
 load();
 }
 
+/* LOAD PRODUCTS */
 function load(){
+products = JSON.parse(localStorage.getItem("products")) || [];
+
 let div=document.getElementById("list");
 div.innerHTML="";
 
@@ -83,8 +111,13 @@ ${p.name} - ₹${p.price} (Stock:${p.stock})
 });
 }
 
+/* SALES */
 function loadSales(){
+sales = JSON.parse(localStorage.getItem("sales")) || [];
+
 let div=document.getElementById("sales");
+div.innerHTML="";
+
 let total=0;
 
 sales.forEach(s=>{
@@ -98,4 +131,4 @@ div.innerHTML+=`<h3>Total Revenue: ₹${total}</h3>`;
 </script>
 
 </body>
-</html>
+  </html>
