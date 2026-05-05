@@ -129,24 +129,32 @@ body {font-family: Arial; margin:0; background:#f5f5f5;}
 <p>Trusted Pharmacy</p>
 </div>
 
+<!-- ACTION BUTTONS -->
 <div class="actions">
 <button class="blue" onclick="doctorHelp()">Doctor Help</button>
 <button class="green" onclick="showShop()">Shop Medicines</button>
+
+<!-- ADMIN BUTTON (UPDATED) -->
 <button class="gray" onclick="window.location.href='admin.html'">Admin</button>
 </div>
 
+<!-- SEARCH -->
 <input class="search" placeholder="Search medicines..." onkeyup="search(this.value)">
 
+<!-- PRODUCTS -->
 <div class="products" id="products"></div>
 
+<!-- CART -->
 <div id="cartBox" style="padding:10px;"></div>
 <h3 id="total" style="padding:10px;"></h3>
 
+<!-- QR -->
 <div style="text-align:center;padding:10px;">
 <h4>📲 Scan QR</h4>
 <img id="qrPreview" width="180">
 </div>
 
+<!-- ACTION BUTTONS -->
 <button class="big-btn green" onclick="checkout()">💬 WhatsApp Order</button>
 <button class="big-btn blue" onclick="downloadPDF()">⬇️ Download Receipt PDF</button>
 
@@ -159,11 +167,12 @@ body {font-family: Arial; margin:0; background:#f5f5f5;}
 
 <script>
 
-/* PRODUCTS */
+/* LOAD PRODUCTS FROM ADMIN */
 let products = JSON.parse(localStorage.getItem("products")) || [];
+
 let cart = [];
 
-/* DISPLAY */
+/* DISPLAY PRODUCTS */
 function display(list){
 let div=document.getElementById("products");
 div.innerHTML="";
@@ -172,11 +181,13 @@ list.forEach((p,i)=>{
 if(p.stock > 0){
 div.innerHTML+=`
 <div class="product">
-${p.rx?'<div class="rx">RX</div>':''}
+${p.rx ? '<div class="rx">RX</div>' : ''}
+
 <img src="${p.img}">
 <h4>${p.name}</h4>
 <p class="price">₹${p.price}</p>
-<p>Stock: ${p.stock}</p>
+<p>Qty: ${p.stock}</p>
+
 <button onclick="add(${i})">Add</button>
 </div>`;
 }
@@ -192,7 +203,7 @@ cart.push(products[i]);
 showCart();
 }
 
-/* CART */
+/* SHOW CART */
 function showCart(){
 let div=document.getElementById("cartBox");
 let total=0;
@@ -223,6 +234,23 @@ function doctorHelp(){
 window.open("https://wa.me/919850752963","_blank");
 }
 
+/* CHECKOUT */
+function checkout(){
+if(cart.length===0)return alert("Cart empty");
+
+let msg="VISHALDEEP MEDICAL ORDER\n\n";
+let total=0;
+
+cart.forEach((i,n)=>{
+msg+=(n+1)+". "+i.name+" - ₹"+i.price+"\n";
+total+=Number(i.price);
+});
+
+msg+="\nTOTAL: ₹"+total;
+
+window.open("https://wa.me/919850752963?text="+encodeURIComponent(msg));
+}
+
 /* QR */
 function getQR(){
 return "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data="+encodeURIComponent(window.location.href);
@@ -232,84 +260,64 @@ function updateQR(){
 document.getElementById("qrPreview").src=getQR();
 }
 
-/* CHECKOUT + SALES + STOCK DEDUCTION */
-function checkout(){
-
-if(cart.length===0)return alert("Cart empty");
-
-let msg="VISHALDEEP MEDICAL ORDER\n\n";
-let total=0;
-
-let products = JSON.parse(localStorage.getItem("products")) || [];
-let sales = JSON.parse(localStorage.getItem("sales")) || [];
-
-cart.forEach((i,n)=>{
-msg+=(n+1)+". "+i.name+" - ₹"+i.price+"\n";
-total+=Number(i.price);
-
-/* stock deduction */
-let p = products.find(x=>x.name===i.name);
-if(p && p.stock>0){
-p.stock = Number(p.stock) - 1;
-}
-});
-
-/* save stock */
-localStorage.setItem("products",JSON.stringify(products));
-
-/* save sales */
-sales.push({
-date:new Date().toLocaleString(),
-items:cart,
-total:total
-});
-localStorage.setItem("sales",JSON.stringify(sales));
-
-cart=[];
-showCart();
-display(products);
-
-msg+="\nTOTAL: ₹"+total;
-
-window.open("https://wa.me/919850752963?text="+encodeURIComponent(msg));
-}
-
-/* PDF */
+/* PDF RECEIPT */
 function downloadPDF(){
 
-if(cart.length===0)return alert("Cart empty");
+if(cart.length===0){
+alert("Cart empty");
+return;
+}
 
 const { jsPDF } = window.jspdf;
-let doc=new jsPDF();
+let doc = new jsPDF();
 
 let y=10,total=0;
 
+/* LOGO */
 doc.addImage("https://upload.wikimedia.org/wikipedia/commons/4/4e/Medical_cross_symbol.svg","PNG",85,y,30,30);
 y+=35;
 
+/* HEADER */
 doc.setFontSize(16);
-doc.text("VISHALDEEP MEDICAL STORE",10,y);
+doc.text("VISHALDEEP MEDICAL & GENERAL STORE",10,y);
 y+=8;
 
 doc.setFontSize(11);
 doc.text("WhatsApp: +91 98507 52963",10,y);y+=6;
+doc.text("Mobile: 9850752963",10,y);y+=6;
 doc.text("Proprietor: Vishal Deepak Babre",10,y);y+=6;
 
-doc.text("Yashwant Complex, Shop No 11",10,y);y+=5;
-doc.text("Lasalgaon - 422306",10,y);y+=8;
+doc.text("Yashwant Complex, Shop No 11,",10,y);y+=5;
+doc.text("Takali Vinchur, Lasalgaon - 422306",10,y);y+=8;
 
+doc.text("---------------------------",10,y);
+y+=8;
+
+/* ITEMS */
 cart.forEach((i,n)=>{
 doc.text(`${n+1}. ${i.name} - ₹${i.price}`,10,y);
 y+=7;
 total+=Number(i.price);
 });
 
-doc.text("TOTAL: ₹"+total,10,y+10);
+doc.text("---------------------------",10,y);
+y+=8;
 
-doc.save("receipt.pdf");
+/* TOTAL */
+doc.setFontSize(13);
+doc.text("TOTAL: ₹"+total,10,y);
+y+=10;
+
+/* QR */
+doc.text("Scan QR:",10,y);
+y+=5;
+doc.addImage(getQR(),"PNG",10,y,50,50);
+
+/* SAVE */
+doc.save("Vishaldeep_Receipt.pdf");
 }
 
 </script>
 
 </body>
-</html>
+    </html>
