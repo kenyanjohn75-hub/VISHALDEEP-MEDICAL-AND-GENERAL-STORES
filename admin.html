@@ -6,63 +6,68 @@
 
 <style>
 body{font-family:Arial;background:#f5f5f5;}
-.box{background:white;padding:10px;margin:10px;border-radius:10px;}
-input{padding:8px;margin:5px;width:90%;}
-button{padding:8px;background:#0a7d3c;color:white;border:none;}
+.box{background:white;margin:10px;padding:10px;border-radius:10px;}
+input{width:90%;padding:8px;margin:5px;}
+button{padding:10px;background:#0a7d3c;color:white;border:none;}
+.red{background:red;}
 </style>
 </head>
 
 <body>
 
-<h2 style="text-align:center;">Admin Panel</h2>
+<h2 style="text-align:center;">ADMIN DASHBOARD</h2>
 
 <div class="box">
-<input type="password" id="pass" placeholder="Enter admin password">
+<input type="password" id="pass" placeholder="Admin password">
 <button onclick="login()">Login</button>
 </div>
 
-<div id="panel" style="display:none;" class="box">
+<div id="panel" style="display:none;">
 
+<div class="box">
 <h3>Add Product</h3>
-
-<input id="name" placeholder="Product name">
+<input id="name" placeholder="Name">
 <input id="price" placeholder="Price">
-<input id="qty" placeholder="Quantity">
+<input id="stock" placeholder="Stock">
 <input id="img" placeholder="Image URL">
+<button onclick="add()">Add</button>
+</div>
 
-<button onclick="addProduct()">Add</button>
-
-<hr>
-
+<div class="box">
+<h3>Products</h3>
 <div id="list"></div>
+</div>
+
+<div class="box">
+<h3>Sales Dashboard</h3>
+<div id="sales"></div>
+</div>
 
 </div>
 
 <script>
 
 let products = JSON.parse(localStorage.getItem("products")) || [];
+let sales = JSON.parse(localStorage.getItem("sales")) || [];
 
 function login(){
 if(document.getElementById("pass").value==="1234"){
 document.getElementById("panel").style.display="block";
 load();
-}else{
-alert("Wrong password");
+loadSales();
+}else alert("Wrong password");
 }
-}
 
-function addProduct(){
+function add(){
 
-let p={
-name:document.getElementById("name").value,
-price:document.getElementById("price").value,
-stock:document.getElementById("qty").value,
-img:document.getElementById("img").value
-};
+products.push({
+name:name.value,
+price:price.value,
+stock:stock.value,
+img:img.value
+});
 
-products.push(p);
 localStorage.setItem("products",JSON.stringify(products));
-
 load();
 }
 
@@ -73,12 +78,24 @@ div.innerHTML="";
 products.forEach((p,i)=>{
 div.innerHTML+=`
 <div class="box">
-${p.name} - ₹${p.price} (Qty:${p.stock})
+${p.name} - ₹${p.price} (Stock:${p.stock})
 </div>`;
 });
+}
+
+function loadSales(){
+let div=document.getElementById("sales");
+let total=0;
+
+sales.forEach(s=>{
+total+=s.total;
+div.innerHTML+=`<p>${s.date} - ₹${s.total}</p>`;
+});
+
+div.innerHTML+=`<h3>Total Revenue: ₹${total}</h3>`;
 }
 
 </script>
 
 </body>
-  </html>
+</html>
