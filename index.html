@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Maharashtra Medical Store</title>
+<title>Vishaldeep Medical Store</title>
 
 <style>
 body {font-family: Arial; margin:0; background:#f5f5f5;}
@@ -17,8 +18,8 @@ body {font-family: Arial; margin:0; background:#f5f5f5;}
 }
 
 .header img {
-    width:90px;
-    height:90px;
+    width:85px;
+    height:85px;
     border-radius:50%;
     background:white;
     padding:6px;
@@ -38,7 +39,6 @@ body {font-family: Arial; margin:0; background:#f5f5f5;}
     padding:6px 12px;
     border:none;
     border-radius:20px;
-    cursor:pointer;
 }
 
 /* SEARCH */
@@ -51,7 +51,7 @@ body {font-family: Arial; margin:0; background:#f5f5f5;}
     border:1px solid #ccc;
 }
 
-/* ACTION BUTTONS */
+/* ACTIONS */
 .actions {
     display:flex;
     gap:10px;
@@ -68,6 +68,7 @@ body {font-family: Arial; margin:0; background:#f5f5f5;}
 
 .blue {background:#1976d2;}
 .green {background:#0a7d3c;}
+.gray {background:#555;}
 
 /* PRODUCTS */
 .products {
@@ -107,6 +108,11 @@ body {font-family: Arial; margin:0; background:#f5f5f5;}
     border-radius:5px;
 }
 
+/* CART */
+.cart-box {
+    padding:10px;
+}
+
 /* NAV */
 .bottom-nav {
     position:fixed;
@@ -119,10 +125,16 @@ body {font-family: Arial; margin:0; background:#f5f5f5;}
     border-top:1px solid #ccc;
 }
 
-.bottom-nav button {
-    background:none;
-    border:none;
-    font-size:14px;
+/* FLOAT WHATSAPP */
+.float-wa {
+    position:fixed;
+    bottom:80px;
+    right:15px;
+    background:#25D366;
+    color:white;
+    padding:12px;
+    border-radius:50%;
+    font-size:20px;
 }
 </style>
 </head>
@@ -136,79 +148,141 @@ body {font-family: Arial; margin:0; background:#f5f5f5;}
 <button onclick="setLang('mr')">मराठी</button>
 </div>
 
-<!-- HERO WITH LOGO -->
+<!-- HERO -->
 <div class="header">
-    <img src="data:image/svg+xml;utf8,
-    <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>
-    <rect width='100' height='100' fill='white'/>
-    <rect x='40' y='20' width='20' height='60' fill='%230a7d3c'/>
-    <rect x='20' y='40' width='60' height='20' fill='%230a7d3c'/>
-    </svg>">
-
-    <h2 id="title">Medical Store</h2>
-    <p id="subtitle">Trusted Pharmacy</p>
+<img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Medical_cross_symbol.svg">
+<h2 id="storeName">Vishaldeep Medical Store</h2>
+<p id="subtitle">Trusted Pharmacy</p>
 </div>
 
 <!-- ACTIONS -->
 <div class="actions">
-<button class="blue" id="doctorBtn">Doctor Help</button>
-<button class="green" id="shopBtn">Shop Medicines</button>
+<button class="blue" id="doctorBtn" onclick="doctorHelp()">Doctor Help</button>
+<button class="green" id="shopBtn" onclick="showShop()">Shop Medicines</button>
+<button class="gray" onclick="uploadPrescription()">Upload Rx</button>
 </div>
 
 <!-- SEARCH -->
-<input class="search" id="search" placeholder="Search medicines...">
+<input class="search" placeholder="Search medicines..." onkeyup="search(this.value)">
 
 <!-- PRODUCTS -->
 <div class="products" id="products"></div>
 
+<!-- CART -->
+<div class="cart-box" id="cartBox"></div>
+
+<h3 style="padding:10px;" id="total"></h3>
+
+<button class="green" style="margin:10px;" onclick="checkout()">Buy via WhatsApp</button>
+
 <!-- NAV -->
 <div class="bottom-nav">
-<button>Home</button>
-<button>Cart</button>
+<button onclick="showShop()">Shop</button>
+<button onclick="showCart()">Cart</button>
 </div>
+
+<!-- FLOAT WA -->
+<div class="float-wa" onclick="openWA()">💬</div>
 
 <script>
 
-/* REALISTIC INDIA MEDICINES */
+/* PRODUCTS */
 const products = [
-{name:"Paracetamol 650mg (Strip 10)", price:28, rx:false},
-{name:"Ibuprofen 400mg (Strip 10)", price:35, rx:false},
-{name:"Cough Syrup 100ml", price:95, rx:false},
+{name:"Paracetamol 650mg", price:28, rx:false},
+{name:"Ibuprofen 400mg", price:35, rx:false},
+{name:"Cough Syrup", price:95, rx:false},
 {name:"Amoxicillin 500mg", price:60, rx:true},
 {name:"Azithromycin 500mg", price:120, rx:true},
-{name:"Vitamin C 500mg", price:110, rx:false},
-{name:"Multivitamin Tablets", price:150, rx:false},
-{name:"Cetirizine 10mg", price:25, rx:false}
+{name:"Vitamin C", price:110, rx:false}
 ];
 
-function display(){
+let cart=[];
+
+/* DISPLAY */
+function display(list){
 let div=document.getElementById("products");
 div.innerHTML="";
 
-products.forEach(p=>{
+list.forEach(p=>{
 div.innerHTML+=`
 <div class="product">
 ${p.rx ? '<div class="rx">RX</div>' : ''}
 <img src="https://via.placeholder.com/150">
 <h4>${p.name}</h4>
 <p class="price">₹${p.price}</p>
+<button onclick="add('${p.name}',${p.price})">Buy</button>
 </div>`;
 });
 }
-display();
+display(products);
 
-/* LANGUAGE SYSTEM */
-const text={
-en:{title:"Medical Store",subtitle:"Trusted Pharmacy",doctor:"Doctor Help",shop:"Shop Medicines"},
-hi:{title:"मेडिकल स्टोर",subtitle:"विश्वसनीय फार्मेसी",doctor:"डॉक्टर सहायता",shop:"दवाइयाँ खरीदें"},
-mr:{title:"मेडिकल स्टोअर",subtitle:"विश्वसनीय फार्मसी",doctor:"डॉक्टर मदत",shop:"औषधे खरेदी करा"}
+/* SEARCH */
+function search(q){
+let f=products.filter(p=>p.name.toLowerCase().includes(q.toLowerCase()));
+display(f);
+}
+
+/* CART */
+function add(name,price){
+cart.push({name,price});
+alert("Added to cart");
+}
+
+/* CART VIEW */
+function showCart(){
+let div=document.getElementById("cartBox");
+let total=0;
+div.innerHTML="";
+
+cart.forEach(i=>{
+total+=i.price;
+div.innerHTML+=`<p>${i.name} - ₹${i.price}</p>`;
+});
+
+document.getElementById("total").innerText="Total: ₹"+total;
+}
+
+/* SHOP */
+function showShop(){
+display(products);
+}
+
+/* UPLOAD RX */
+function uploadPrescription(){
+alert("Upload feature coming soon (connect camera or file upload)");
+}
+
+/* DOCTOR HELP */
+function doctorHelp(){
+window.open("https://wa.me/254786467783","_blank");
+}
+
+/* WHATSAPP */
+function openWA(){
+window.open("https://wa.me/254786467783","_blank");
+}
+
+/* CHECKOUT */
+function checkout(){
+let msg="Order:%0A";
+cart.forEach(i=>{
+msg+=i.name+" - ₹"+i.price+"%0A";
+});
+window.open("https://wa.me/254786467783?text="+msg,"_blank");
+}
+
+/* LANGUAGE */
+const t={
+en:{store:"Vishaldeep Medical Store",sub:"Trusted Pharmacy",doc:"Doctor Help",shop:"Shop Medicines"},
+hi:{store:"विशालदीप मेडिकल स्टोर",sub:"विश्वसनीय फार्मेसी",doc:"डॉक्टर सहायता",shop:"दवाइयाँ खरीदें"},
+mr:{store:"विशालदीप मेडिकल स्टोअर",sub:"विश्वसनीय फार्मसी",doc:"डॉक्टर मदत",shop:"औषधे खरेदी करा"}
 };
 
 function setLang(l){
-document.getElementById("title").innerText=text[l].title;
-document.getElementById("subtitle").innerText=text[l].subtitle;
-document.getElementById("doctorBtn").innerText=text[l].doctor;
-document.getElementById("shopBtn").innerText=text[l].shop;
+document.getElementById("storeName").innerText=t[l].store;
+document.getElementById("subtitle").innerText=t[l].sub;
+document.getElementById("doctorBtn").innerText=t[l].doc;
+document.getElementById("shopBtn").innerText=t[l].shop;
 }
 
 setLang("en");
@@ -216,4 +290,295 @@ setLang("en");
 </script>
 
 </body>
-    </html>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vishaldeep Medical Store</title>
+
+<style>
+body {font-family: Arial; margin:0; background:#f5f5f5;}
+
+/* HERO */
+.header {
+    background: linear-gradient(135deg,#0a7d3c,#1e88e5);
+    color:white;
+    text-align:center;
+    padding:20px;
+}
+
+.header img {
+    width:85px;
+    height:85px;
+    border-radius:50%;
+    background:white;
+    padding:6px;
+    margin-bottom:10px;
+}
+
+/* LANGUAGE */
+.lang {
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    padding:10px;
+    background:#eee;
+}
+
+.lang button {
+    padding:6px 12px;
+    border:none;
+    border-radius:20px;
+}
+
+/* SEARCH */
+.search {
+    width:90%;
+    margin:10px auto;
+    display:block;
+    padding:12px;
+    border-radius:20px;
+    border:1px solid #ccc;
+}
+
+/* ACTIONS */
+.actions {
+    display:flex;
+    gap:10px;
+    padding:10px;
+}
+
+.actions button {
+    flex:1;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    color:white;
+}
+
+.blue {background:#1976d2;}
+.green {background:#0a7d3c;}
+.gray {background:#555;}
+
+/* PRODUCTS */
+.products {
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+    padding:10px;
+}
+
+.product {
+    background:white;
+    padding:10px;
+    border-radius:10px;
+    text-align:center;
+    position:relative;
+}
+
+.product img {
+    width:100%;
+    height:120px;
+    object-fit:cover;
+}
+
+.price {
+    font-weight:bold;
+    color:#0a7d3c;
+}
+
+.rx {
+    position:absolute;
+    top:8px;
+    left:8px;
+    background:red;
+    color:white;
+    font-size:10px;
+    padding:3px 6px;
+    border-radius:5px;
+}
+
+/* CART */
+.cart-box {
+    padding:10px;
+}
+
+/* NAV */
+.bottom-nav {
+    position:fixed;
+    bottom:0;
+    width:100%;
+    background:white;
+    display:flex;
+    justify-content:space-around;
+    padding:10px;
+    border-top:1px solid #ccc;
+}
+
+/* FLOAT WHATSAPP */
+.float-wa {
+    position:fixed;
+    bottom:80px;
+    right:15px;
+    background:#25D366;
+    color:white;
+    padding:12px;
+    border-radius:50%;
+    font-size:20px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- LANGUAGE -->
+<div class="lang">
+<button onclick="setLang('en')">English</button>
+<button onclick="setLang('hi')">हिंदी</button>
+<button onclick="setLang('mr')">मराठी</button>
+</div>
+
+<!-- HERO -->
+<div class="header">
+<img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Medical_cross_symbol.svg">
+<h2 id="storeName">Vishaldeep Medical Store</h2>
+<p id="subtitle">Trusted Pharmacy</p>
+</div>
+
+<!-- ACTIONS -->
+<div class="actions">
+<button class="blue" id="doctorBtn" onclick="doctorHelp()">Doctor Help</button>
+<button class="green" id="shopBtn" onclick="showShop()">Shop Medicines</button>
+<button class="gray" onclick="uploadPrescription()">Upload Rx</button>
+</div>
+
+<!-- SEARCH -->
+<input class="search" placeholder="Search medicines..." onkeyup="search(this.value)">
+
+<!-- PRODUCTS -->
+<div class="products" id="products"></div>
+
+<!-- CART -->
+<div class="cart-box" id="cartBox"></div>
+
+<h3 style="padding:10px;" id="total"></h3>
+
+<button class="green" style="margin:10px;" onclick="checkout()">Buy via WhatsApp</button>
+
+<!-- NAV -->
+<div class="bottom-nav">
+<button onclick="showShop()">Shop</button>
+<button onclick="showCart()">Cart</button>
+</div>
+
+<!-- FLOAT WA -->
+<div class="float-wa" onclick="openWA()">💬</div>
+
+<script>
+
+/* PRODUCTS */
+const products = [
+{name:"Paracetamol 650mg", price:28, rx:false},
+{name:"Ibuprofen 400mg", price:35, rx:false},
+{name:"Cough Syrup", price:95, rx:false},
+{name:"Amoxicillin 500mg", price:60, rx:true},
+{name:"Azithromycin 500mg", price:120, rx:true},
+{name:"Vitamin C", price:110, rx:false}
+];
+
+let cart=[];
+
+/* DISPLAY */
+function display(list){
+let div=document.getElementById("products");
+div.innerHTML="";
+
+list.forEach(p=>{
+div.innerHTML+=`
+<div class="product">
+${p.rx ? '<div class="rx">RX</div>' : ''}
+<img src="https://via.placeholder.com/150">
+<h4>${p.name}</h4>
+<p class="price">₹${p.price}</p>
+<button onclick="add('${p.name}',${p.price})">Buy</button>
+</div>`;
+});
+}
+display(products);
+
+/* SEARCH */
+function search(q){
+let f=products.filter(p=>p.name.toLowerCase().includes(q.toLowerCase()));
+display(f);
+}
+
+/* CART */
+function add(name,price){
+cart.push({name,price});
+alert("Added to cart");
+}
+
+/* CART VIEW */
+function showCart(){
+let div=document.getElementById("cartBox");
+let total=0;
+div.innerHTML="";
+
+cart.forEach(i=>{
+total+=i.price;
+div.innerHTML+=`<p>${i.name} - ₹${i.price}</p>`;
+});
+
+document.getElementById("total").innerText="Total: ₹"+total;
+}
+
+/* SHOP */
+function showShop(){
+display(products);
+}
+
+/* UPLOAD RX */
+function uploadPrescription(){
+alert("Upload feature coming soon (connect camera or file upload)");
+}
+
+/* DOCTOR HELP */
+function doctorHelp(){
+window.open("https://wa.me/254786467783","_blank");
+}
+
+/* WHATSAPP */
+function openWA(){
+window.open("https://wa.me/254786467783","_blank");
+}
+
+/* CHECKOUT */
+function checkout(){
+let msg="Order:%0A";
+cart.forEach(i=>{
+msg+=i.name+" - ₹"+i.price+"%0A";
+});
+window.open("https://wa.me/254786467783?text="+msg,"_blank");
+}
+
+/* LANGUAGE */
+const t={
+en:{store:"Vishaldeep Medical Store",sub:"Trusted Pharmacy",doc:"Doctor Help",shop:"Shop Medicines"},
+hi:{store:"विशालदीप मेडिकल स्टोर",sub:"विश्वसनीय फार्मेसी",doc:"डॉक्टर सहायता",shop:"दवाइयाँ खरीदें"},
+mr:{store:"विशालदीप मेडिकल स्टोअर",sub:"विश्वसनीय फार्मसी",doc:"डॉक्टर मदत",shop:"औषधे खरेदी करा"}
+};
+
+function setLang(l){
+document.getElementById("storeName").innerText=t[l].store;
+document.getElementById("subtitle").innerText=t[l].sub;
+document.getElementById("doctorBtn").innerText=t[l].doc;
+document.getElementById("shopBtn").innerText=t[l].shop;
+}
+
+setLang("en");
+
+</script>
+
+</body>
+</html>
