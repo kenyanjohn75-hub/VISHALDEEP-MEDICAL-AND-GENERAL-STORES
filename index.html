@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Vishaldeep Medical Store</title>
 
-<!-- PDF LIBRARY -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
@@ -89,7 +88,7 @@ body {font-family: Arial; margin:0; background:#f5f5f5;}
     object-fit:cover;
 }
 
-.price {font-weight:bold; color:#0a7d3c;}
+.price {font-weight:bold;color:#0a7d3c;}
 
 .rx {
     position:absolute;
@@ -112,17 +111,6 @@ body {font-family: Arial; margin:0; background:#f5f5f5;}
     font-size:16px;
 }
 
-.float-wa {
-    position:fixed;
-    bottom:80px;
-    right:15px;
-    background:#25D366;
-    color:white;
-    padding:12px;
-    border-radius:50%;
-    font-size:20px;
-}
-
 .bottom-nav {
     position:fixed;
     bottom:0;
@@ -133,27 +121,30 @@ body {font-family: Arial; margin:0; background:#f5f5f5;}
     padding:10px;
     border-top:1px solid #ccc;
 }
+
+.float-wa {
+    position:fixed;
+    bottom:80px;
+    right:15px;
+    background:#25D366;
+    color:white;
+    padding:12px;
+    border-radius:50%;
+}
 </style>
 </head>
 
 <body>
 
-<div class="lang">
-<button onclick="setLang('en')">English</button>
-<button onclick="setLang('hi')">हिंदी</button>
-<button onclick="setLang('mr')">मराठी</button>
-</div>
-
 <div class="header">
 <img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Medical_cross_symbol.svg">
-<h2 id="storeName">Vishaldeep Medical Store</h2>
-<p id="subtitle">Trusted Pharmacy</p>
+<h2>Vishaldeep Medical Store</h2>
+<p>Trusted Pharmacy</p>
 </div>
 
 <div class="actions">
-<button class="blue" onclick="doctorHelp()">Doctor Help</button>
-<button class="green" onclick="showShop()">Shop Medicines</button>
-<button class="gray" onclick="uploadPrescription()">Upload Rx</button>
+<button class="blue" onclick="showShop()">Shop</button>
+<button class="green" onclick="doctorHelp()">WhatsApp</button>
 <button class="gray" onclick="openAdmin()">Admin</button>
 </div>
 
@@ -178,18 +169,9 @@ body {font-family: Arial; margin:0; background:#f5f5f5;}
 </div>
 
 <button class="big-btn green" onclick="checkout()">💬 WhatsApp Order</button>
-<button class="big-btn blue" onclick="downloadPDF()">⬇️ Download PDF Receipt</button>
+<button class="big-btn blue" onclick="downloadPDF()">⬇️ Download Receipt PDF</button>
 
-<div class="bottom-nav">
-<button onclick="showShop()">Shop</button>
-<button onclick="showCart()">Cart</button>
-</div>
-
-<div class="float-wa" onclick="doctorHelp()">💬</div>
-
-<input type="file" id="rxUpload" style="display:none" onchange="handleUpload(event)">
-
-<!-- ADMIN PANEL -->
+<!-- ADMIN -->
 <div id="adminPanel" style="display:none;padding:10px;background:#fff;margin:10px;border-radius:10px;">
 <h3>🔐 Admin Dashboard</h3>
 
@@ -199,20 +181,26 @@ body {font-family: Arial; margin:0; background:#f5f5f5;}
 <div id="adminArea" style="display:none;margin-top:10px;"></div>
 </div>
 
+<div class="bottom-nav">
+<button onclick="showShop()">Shop</button>
+<button onclick="showCart()">Cart</button>
+</div>
+
+<div class="float-wa" onclick="doctorHelp()">💬</div>
+
 <script>
 
-/* STOCK DATA */
+/* PRODUCTS (with stock memory) */
 let products = JSON.parse(localStorage.getItem("products")) || [
-{name:"Panadol 500mg",price:30,rx:false,category:"Pain Relief",stock:true,img:"https://www.panadol.com/content/dam/cf-consumer-healthcare/panadol/en_IN/products/panadol-advance-500mg.png"},
-{name:"Brufen 400mg",price:40,rx:false,category:"Pain Relief",stock:true,img:"https://www.mims.com/resources/drug/IN/image/brufen.jpg"},
+{name:"Panadol",price:30,rx:false,category:"Pain Relief",stock:true,img:"https://www.panadol.com/content/dam/cf-consumer-healthcare/panadol/en_IN/products/panadol-advance-500mg.png"},
+{name:"Brufen",price:40,rx:false,category:"Pain Relief",stock:true,img:"https://www.mims.com/resources/drug/IN/image/brufen.jpg"},
 {name:"Benylin Syrup",price:120,rx:false,category:"Cough & Cold",stock:true,img:"https://www.benylin.com/content/dam/cf-consumer-healthcare/benylin/en_IN/products/benylin-cough-syrup.png"},
 {name:"Augmentin",price:150,rx:true,category:"Antibiotics",stock:false,img:"https://www.gsk.com/media/5920/augmentin-tablets.jpg"},
 {name:"Azithral",price:180,rx:true,category:"Antibiotics",stock:true,img:"https://www.ale.mb.ca/wp-content/uploads/2019/08/azithromycin.jpg"},
-{name:"Limcee Vitamin C",price:110,rx:false,category:"Vitamins",stock:true,img:"https://www.1mg.com/images/products/limcee-vitamin-c-tablet.jpg"}
+{name:"Limcee",price:110,rx:false,category:"Vitamins",stock:true,img:"https://www.1mg.com/images/products/limcee-vitamin-c-tablet.jpg"}
 ];
 
 let cart=[];
-let rxFile=null;
 
 /* DISPLAY */
 function display(list){
@@ -261,12 +249,11 @@ document.getElementById("total").innerText="Total: ₹"+total;
 updateQR();
 }
 
-/* SEARCH */
+/* SEARCH + FILTER */
 function search(q){
 display(products.filter(p=>p.name.toLowerCase().includes(q.toLowerCase())));
 }
 
-/* FILTER */
 function filterCategory(c){
 if(c==="All")return display(products);
 display(products.filter(p=>p.category===c));
@@ -277,16 +264,6 @@ function showShop(){display(products);}
 /* WHATSAPP */
 function doctorHelp(){
 window.open("https://wa.me/919850752963","_blank");
-}
-
-/* RX */
-function uploadPrescription(){
-document.getElementById("rxUpload").click();
-}
-
-function handleUpload(e){
-rxFile=e.target.files[0];
-alert("Uploaded "+rxFile.name);
 }
 
 /* CHECKOUT */
@@ -314,26 +291,56 @@ function updateQR(){
 document.getElementById("qrPreview").src=getQR();
 }
 
-/* PDF ONLY (NO PRINT) */
+/* PDF RECEIPT (FULL BUSINESS INVOICE) */
 function downloadPDF(){
-const {jsPDF}=window.jspdf;
+
+if(cart.length===0){alert("Cart empty");return;}
+
+const { jsPDF } = window.jspdf;
 let doc=new jsPDF();
 
 let y=10,total=0;
 
-doc.setFontSize(16);
-doc.text("VISHALDEEP MEDICAL STORE",10,y);
-y+=10;
+/* LOGO */
+let logo="https://upload.wikimedia.org/wikipedia/commons/4/4e/Medical_cross_symbol.svg";
+doc.addImage(logo,"PNG",85,y,30,30);
+y+=35;
 
-doc.setFontSize(12);
+/* HEADER */
+doc.setFontSize(16);
+doc.text("VISHALDEEP MEDICAL & GENERAL STORE",10,y);
+y+=8;
+
+doc.setFontSize(11);
+doc.text("WhatsApp: +91 98507 52963",10,y);y+=6;
+doc.text("Mobile: 9850752963",10,y);y+=6;
+doc.text("Proprietor: Vishal Deepak Babre",10,y);y+=6;
+
+doc.text("Yashwant Complex, Shop No 11,",10,y);y+=5;
+doc.text("Takali Vinchur, Lasalgaon - 422306",10,y);y+=8;
+
+doc.text("------------------------------",10,y);y+=8;
+
+/* ITEMS */
 cart.forEach((i,n)=>{
 doc.text(`${n+1}. ${i.name} - ₹${i.price}`,10,y);
-y+=8;
+y+=7;
 total+=i.price;
 });
 
-doc.text("TOTAL: ₹"+total,10,y);
-doc.save("receipt.pdf");
+doc.text("------------------------------",10,y);y+=8;
+
+/* TOTAL */
+doc.setFontSize(13);
+doc.text("TOTAL: ₹"+total,10,y);y+=10;
+
+/* QR */
+doc.text("Scan QR:",10,y);
+y+=5;
+doc.addImage(getQR(),"PNG",10,y,50,50);
+
+/* SAVE */
+doc.save("Medical_Receipt.pdf");
 }
 
 /* ADMIN */
@@ -342,7 +349,9 @@ document.getElementById("adminPanel").style.display="block";
 }
 
 function loginAdmin(){
-if(document.getElementById("adminPass").value!=="1234")return alert("Wrong password");
+if(document.getElementById("adminPass").value!=="1234")
+return alert("Wrong password");
+
 document.getElementById("adminArea").style.display="block";
 renderAdmin();
 }
@@ -372,4 +381,4 @@ display(products);
 </script>
 
 </body>
-</html>
+    </html>
