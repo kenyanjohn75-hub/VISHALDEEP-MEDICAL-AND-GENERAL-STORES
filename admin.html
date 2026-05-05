@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Admin Dashboard</title>
+<title>Admin Panel</title>
 
 <style>
 body{font-family:Arial;background:#f5f5f5;margin:0;}
@@ -15,7 +15,7 @@ button{padding:10px;background:#0a7d3c;color:white;border:none;}
 
 <body>
 
-<h2 style="text-align:center;">ADMIN DASHBOARD</h2>
+<h2 style="text-align:center;">ADMIN PANEL</h2>
 
 <div class="box">
 <input type="password" id="pass" placeholder="Admin password">
@@ -25,26 +25,27 @@ button{padding:10px;background:#0a7d3c;color:white;border:none;}
 <div id="panel" style="display:none;">
 
 <div class="box">
-<h3>Add Product</h3>
+<h3>Add Medicine</h3>
 
 <input id="name" placeholder="Name">
 <input id="price" placeholder="Price">
 <input id="stock" placeholder="Stock">
 
-<input type="file" id="imgFile" accept="image/*">
+<!-- 🔥 IMAGE UPLOAD (FIXED) -->
+<input type="file" id="imgInput" accept="image/*">
 <br>
-<img id="preview" style="width:100px;margin-top:5px;">
+<img id="preview" style="width:120px;margin-top:10px;display:none;border:1px solid #ccc;padding:5px;">
 
-<button onclick="add()">Add Product</button>
+<button onclick="addProduct()">Add Product</button>
 </div>
 
 <div class="box">
-<h3>Products</h3>
+<h3>Product List</h3>
 <div id="list"></div>
 </div>
 
 <div class="box">
-<h3>📊 Sales Dashboard</h3>
+<h3>Sales</h3>
 <div id="sales"></div>
 </div>
 
@@ -54,7 +55,8 @@ button{padding:10px;background:#0a7d3c;color:white;border:none;}
 
 let products = JSON.parse(localStorage.getItem("products")) || [];
 let sales = JSON.parse(localStorage.getItem("sales")) || [];
-let base64Image = "";
+
+let imageBase64 = "";
 
 /* LOGIN */
 function login(){
@@ -65,33 +67,49 @@ loadSales();
 }else alert("Wrong password");
 }
 
-/* IMAGE UPLOAD */
-document.getElementById("imgFile").addEventListener("change",function(e){
+/* 🔥 FIXED IMAGE UPLOAD */
+document.getElementById("imgInput").addEventListener("change",function(e){
+
 let file = e.target.files[0];
+
+if(!file)return;
+
 let reader = new FileReader();
 
 reader.onload=function(){
-base64Image = reader.result;
-document.getElementById("preview").src = base64Image;
+imageBase64 = reader.result;
+let img = document.getElementById("preview");
+img.src = imageBase64;
+img.style.display="block";
 };
 
 reader.readAsDataURL(file);
 });
 
 /* ADD PRODUCT */
-function add(){
+function addProduct(){
+
+if(!name.value || !price.value || !stock.value){
+alert("Fill all fields");
+return;
+}
 
 products.push({
 name:name.value,
 price:Number(price.value),
 stock:Number(stock.value),
-img:base64Image
+img:imageBase64 || "https://via.placeholder.com/150"
 });
 
 localStorage.setItem("products",JSON.stringify(products));
 
-base64Image="";
-preview.src="";
+/* RESET */
+name.value="";
+price.value="";
+stock.value="";
+imageBase64="";
+preview.style.display="none";
+imgInput.value="";
 
 load();
 }
@@ -106,7 +124,9 @@ div.innerHTML="";
 products.forEach((p,i)=>{
 div.innerHTML+=`
 <div class="box">
-${p.name} - ₹${p.price} (Stock:${p.stock})
+<img src="${p.img}" style="width:80px;height:80px;object-fit:cover;"><br>
+<b>${p.name}</b><br>
+₹${p.price} | Stock: ${p.stock}
 </div>`;
 });
 }
@@ -122,7 +142,10 @@ let total=0;
 
 sales.forEach(s=>{
 total+=s.total;
-div.innerHTML+=`<p>${s.date} - ₹${s.total}</p>`;
+div.innerHTML+=`
+<div class="box">
+${s.date} - ₹${s.total}
+</div>`;
 });
 
 div.innerHTML+=`<h3>Total Revenue: ₹${total}</h3>`;
@@ -131,4 +154,4 @@ div.innerHTML+=`<h3>Total Revenue: ₹${total}</h3>`;
 </script>
 
 </body>
-  </html>
+</html>
