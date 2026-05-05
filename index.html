@@ -1,218 +1,292 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vishaldeep Medical & General Store</title>
+<title>Vishaldeep Medical Store</title>
 
 <style>
-body {
-    margin:0;
-    font-family: 'Segoe UI', sans-serif;
-    background:#f4f7fb;
+body {font-family: Arial; margin:0; background:#f5f5f5;}
+
+.header {
+    background: green;
+    color: white;
+    text-align: center;
+    padding: 15px;
 }
 
-header {
-    background: linear-gradient(135deg,#0b6b3a,#12a150);
-    color:white;
-    text-align:center;
-    padding:30px 15px;
+.search {
+    width: 90%;
+    margin: 10px auto;
+    display: block;
+    padding: 12px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
 }
 
-.hero {
-    text-align:center;
-    padding:40px 20px;
-    background:white;
-}
-
-.btn {
-    display:inline-block;
-    margin:10px;
-    padding:12px 20px;
-    border-radius:6px;
-    color:white;
-    text-decoration:none;
-    font-weight:bold;
-}
-
-.btn1 { background:#0b6b3a; }
-.btn2 { background:#0077cc; }
-.btn3 { background:#d9534f; }
-
-.container {
-    max-width:1100px;
-    margin:auto;
-    padding:20px;
-}
-
-.search-box {
-    text-align:center;
-    margin-bottom:20px;
-}
-
-.search-box input {
-    width:80%;
-    max-width:400px;
+.actions {
+    display:flex;
+    gap:10px;
     padding:10px;
-    border-radius:6px;
-    border:1px solid #ccc;
 }
+.actions button {
+    flex:1;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    color:white;
+}
+.blue {background:blue;}
+.green {background:green;}
+.gray {background:#666;}
 
 .products {
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-    gap:15px;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+    padding:10px;
 }
-
 .product {
     background:white;
     padding:10px;
     border-radius:10px;
     text-align:center;
-    box-shadow:0 3px 10px rgba(0,0,0,0.1);
 }
-
 .product img {
     width:100%;
-    height:140px;
+    height:120px;
     object-fit:cover;
-    border-radius:8px;
+}
+.product button {
+    margin-top:5px;
+    padding:8px;
+    border:none;
+    background:green;
+    color:white;
+    border-radius:5px;
 }
 
-footer {
-    background:#0b6b3a;
-    color:white;
+.filters {
+    display:flex;
+    gap:10px;
+    padding:10px;
+}
+
+.page {display:none;}
+.active {display:block;}
+
+.bottom-nav {
+    position:fixed;
+    bottom:0;
+    width:100%;
+    background:white;
+    display:flex;
+    justify-content:space-around;
+    padding:10px;
+    border-top:1px solid #ccc;
+}
+.bottom-nav button {
+    background:none;
+    border:none;
+    font-size:16px;
+}
+
+/* UPSSELL POPUP */
+#upsellPopup {
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.6);
+    z-index:999;
+}
+.popup-box {
+    background:white;
+    width:90%;
+    max-width:350px;
+    margin:100px auto;
+    padding:20px;
+    border-radius:15px;
     text-align:center;
-    padding:15px;
+    position:relative;
+}
+.close-btn {
+    position:absolute;
+    top:10px;
+    right:15px;
+    font-size:20px;
+    cursor:pointer;
 }
 </style>
 </head>
 
 <body>
 
-<header>
-    <h1>Vishaldeep Medical & General Store</h1>
-    <p>Your trusted pharmacy</p>
-</header>
-
-<section class="hero">
-    <h2>Quality Medicines & Healthcare Services</h2>
-
-    <a href="https://wa.me/919850752963" class="btn btn1">Book Appointment 📅</a>
-    <a href="https://wa.me/919850752963" class="btn btn2">Talk to Expert 💬</a>
-    <a href="https://www.google.com/maps/search/?api=1&query=Yashwant+Complex+Takali+Vinchur+Lasalgaon+422306" class="btn btn3">Get Directions 📍</a>
-</section>
-
-<div class="container">
-
-<h2>Available Medicines</h2>
-
-<div class="search-box">
-    <input type="text" id="searchInput" placeholder="Search for medicine...">
+<!-- HOME -->
+<div id="home" class="page active">
+<div class="header">
+<h2>Vishaldeep Medical & General Store</h2>
+<p>Your trusted pharmacy</p>
 </div>
 
-<div class="products">
-
-<!-- PRODUCTS -->
-
-<div class="product">
-<img loading="lazy" src="https://source.unsplash.com/300x200/?medicine,pills" onerror="this.src='https://via.placeholder.com/300x200?text=Paracetamol'">
-<h4>Paracetamol</h4>
+<div class="actions">
+<button class="blue" onclick="openWhatsApp()">Talk to Expert</button>
+<button class="green" onclick="showPage('shop')">Shop Medicines</button>
 </div>
 
-<div class="product">
-<img loading="lazy" src="https://source.unsplash.com/300x200/?antibiotic" onerror="this.src='https://via.placeholder.com/300x200?text=Amoxicillin'">
-<h4>Amoxicillin</h4>
+<input class="search" placeholder="Search medicine..." onkeyup="searchHome(this.value)">
+<div class="products" id="homeProducts"></div>
 </div>
 
-<div class="product">
-<img loading="lazy" src="https://source.unsplash.com/300x200/?painkillers" onerror="this.src='https://via.placeholder.com/300x200?text=Ibuprofen'">
-<h4>Ibuprofen</h4>
+<!-- SHOP -->
+<div id="shop" class="page">
+<div class="header">
+<input class="search" placeholder="Search for Medication & Products..." onkeyup="searchShop(this.value)">
 </div>
 
-<div class="product">
-<img loading="lazy" src="https://source.unsplash.com/300x200/?tablets" onerror="this.src='https://via.placeholder.com/300x200?text=Panadol'">
-<h4>Panadol</h4>
+<div class="actions">
+<button class="gray">Speak to Doctor</button>
+<button class="green">Upload Prescription</button>
 </div>
 
-<div class="product">
-<img loading="lazy" src="https://source.unsplash.com/300x200/?vitamins" onerror="this.src='https://via.placeholder.com/300x200?text=Vitamin+C'">
-<h4>Vitamin C</h4>
+<div class="filters">
+<select><option>Sort by Recommended</option></select>
+<select><option>Category</option></select>
 </div>
 
-<div class="product">
-<img loading="lazy" src="https://source.unsplash.com/300x200/?cough,syrup" onerror="this.src='https://via.placeholder.com/300x200?text=Cough+Syrup'">
-<h4>Cough Syrup</h4>
+<div class="products" id="shopProducts"></div>
 </div>
 
-<div class="product">
-<img loading="lazy" src="https://source.unsplash.com/300x200/?insulin" onerror="this.src='https://via.placeholder.com/300x200?text=Insulin'">
-<h4>Insulin</h4>
+<!-- CART -->
+<div id="cart" class="page">
+<div class="header"><h2>Your Cart</h2></div>
+
+<div id="cartItems" style="padding:10px;"></div>
+<h3 id="total" style="padding:10px;"></h3>
+
+<button class="green" style="margin:10px;" onclick="checkout()">Order via WhatsApp</button>
 </div>
 
-<div class="product">
-<img loading="lazy" src="https://source.unsplash.com/300x200/?rehydration" onerror="this.src='https://via.placeholder.com/300x200?text=ORS'">
-<h4>ORS</h4>
+<!-- UPSSELL POPUP -->
+<div id="upsellPopup">
+  <div class="popup-box">
+    <span class="close-btn" onclick="closeUpsell()">✖</span>
+    <h3>🔥 Special Offer</h3>
+    <p>Boost your recovery faster!</p>
+    <img src="https://via.placeholder.com/150">
+    <h4>Vitamin C + Zinc</h4>
+    <p style="color:green; font-weight:bold;">KES 120</p>
+    <button onclick="addUpsell()" class="green" style="width:100%;">Add to Cart</button>
+  </div>
 </div>
 
-<div class="product">
-<img loading="lazy" src="https://source.unsplash.com/300x200/?aspirin" onerror="this.src='https://via.placeholder.com/300x200?text=Aspirin'">
-<h4>Aspirin</h4>
+<!-- NAV -->
+<div class="bottom-nav">
+<button onclick="showPage('home')">Home</button>
+<button onclick="showPage('shop')">Shop</button>
+<button onclick="showPage('cart')">Cart 🛒</button>
 </div>
-
-<div class="product">
-<img loading="lazy" src="https://source.unsplash.com/300x200/?antacid" onerror="this.src='https://via.placeholder.com/300x200?text=Antacid'">
-<h4>Antacid</h4>
-</div>
-
-<div class="product">
-<img loading="lazy" src="https://source.unsplash.com/300x200/?allergy,medicine" onerror="this.src='https://via.placeholder.com/300x200?text=Antihistamine'">
-<h4>Antihistamine</h4>
-</div>
-
-<div class="product">
-<img loading="lazy" src="https://source.unsplash.com/300x200/?zinc,supplement" onerror="this.src='https://via.placeholder.com/300x200?text=Zinc'">
-<h4>Zinc Tablets</h4>
-</div>
-
-<div class="product">
-<img loading="lazy" src="https://source.unsplash.com/300x200/?eye,drops" onerror="this.src='https://via.placeholder.com/300x200?text=Eye+Drops'">
-<h4>Eye Drops</h4>
-</div>
-
-<div class="product">
-<img loading="lazy" src="https://source.unsplash.com/300x200/?bandage" onerror="this.src='https://via.placeholder.com/300x200?text=Bandages'">
-<h4>Bandages</h4>
-</div>
-
-<div class="product">
-<img loading="lazy" src="https://source.unsplash.com/300x200/?sanitizer" onerror="this.src='https://via.placeholder.com/300x200?text=Sanitizer'">
-<h4>Hand Sanitizer</h4>
-</div>
-
-</div>
-</div>
-
-<footer>
-<p>
-📍 Yashwant Complex Shop No 11, Takali Vinchur, Lasalgaon 422306 <br>
-📞 9850752963 <br>
-👤 Proprietor: Vishal Deepak Babre
-</p>
-</footer>
 
 <script>
-const searchInput = document.getElementById('searchInput');
-const products = document.querySelectorAll('.product');
+const products = [
+{name:"Paracetamol", price:50, img:"https://via.placeholder.com/150"},
+{name:"Ibuprofen", price:80, img:"https://via.placeholder.com/150"},
+{name:"Vitamin C", price:100, img:"https://via.placeholder.com/150"},
+{name:"Cough Syrup", price:150, img:"https://via.placeholder.com/150"},
+{name:"Insulin", price:500, img:"https://via.placeholder.com/150"},
+{name:"Antibiotics", price:300, img:"https://via.placeholder.com/150"}
+];
 
-searchInput.addEventListener('keyup', function() {
-let filter = searchInput.value.toLowerCase();
+function display(id,list){
+let div=document.getElementById(id);
+if(!div) return;
+div.innerHTML="";
+list.forEach(p=>{
+div.innerHTML+=`
+<div class="product">
+<img src="${p.img}">
+<h4>${p.name}</h4>
+<p>KES ${p.price}</p>
+<button onclick="addToCart('${p.name}',${p.price})">Add to Cart</button>
+</div>`;
+});
+}
 
-products.forEach(product => {
-let text = product.innerText.toLowerCase();
-product.style.display = text.includes(filter) ? "block" : "none";
+display("homeProducts",products);
+display("shopProducts",products);
+
+/* NAVIGATION */
+function showPage(page){
+document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+document.getElementById(page).classList.add("active");
+if(page==="cart") loadCart();
+}
+
+/* SEARCH */
+function searchHome(q){
+let f=products.filter(p=>p.name.toLowerCase().includes(q.toLowerCase()));
+display("homeProducts",f);
+}
+function searchShop(q){
+let f=products.filter(p=>p.name.toLowerCase().includes(q.toLowerCase()));
+display("shopProducts",f);
+}
+
+/* CART */
+function addToCart(name,price){
+let cart=JSON.parse(localStorage.getItem("cart"))||[];
+cart.push({name,price});
+localStorage.setItem("cart",JSON.stringify(cart));
+alert("Added to cart");
+}
+
+function loadCart(){
+let cart=JSON.parse(localStorage.getItem("cart"))||[];
+let div=document.getElementById("cartItems");
+let total=0;
+div.innerHTML="";
+cart.forEach(item=>{
+total+=item.price;
+div.innerHTML+=`<p>${item.name} - KES ${item.price}</p>`;
 });
-});
+document.getElementById("total").innerText="Total: KES "+total;
+}
+
+/* WHATSAPP */
+function openWhatsApp(){
+window.open("https://wa.me/919850752963","_blank");
+}
+
+/* CHECKOUT + UPSELL */
+function checkout(){
+let cart=JSON.parse(localStorage.getItem("cart"))||[];
+let msg="Order:%0A";
+cart.forEach(i=>msg+=i.name+" - "+i.price+"%0A");
+
+window.open("https://wa.me/919850752963?text="+msg,"_blank");
+
+setTimeout(showUpsell,1500);
+}
+
+/* UPSELL */
+function showUpsell(){
+if(sessionStorage.getItem("upsellShown")) return;
+document.getElementById("upsellPopup").style.display="block";
+sessionStorage.setItem("upsellShown","true");
+}
+
+function closeUpsell(){
+document.getElementById("upsellPopup").style.display="none";
+}
+
+function addUpsell(){
+addToCart("Vitamin C + Zinc",120);
+closeUpsell();
+alert("Added to cart!");
+}
 </script>
 
 </body>
