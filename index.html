@@ -47,15 +47,6 @@ object-fit:cover;
 
 .price{color:#0a7d3c;font-weight:bold;}
 
-.big-btn{
-width:90%;
-margin:8px auto;
-display:block;
-padding:12px;
-border:none;
-border-radius:10px;
-}
-
 .bottom-nav{
 position:fixed;
 bottom:0;
@@ -81,15 +72,15 @@ padding:10px;
 <button class="gray" onclick="window.location.href='admin.html'">Admin</button>
 </div>
 
-<input class="search" placeholder="Search..." onkeyup="search(this.value)">
+<input class="search" placeholder="Search medicines..." onkeyup="search(this.value)">
 
 <div class="products" id="products"></div>
 
 <div id="cartBox" style="padding:10px;"></div>
 <h3 id="total"></h3>
 
-<button class="big-btn green" onclick="checkout()">WhatsApp Order</button>
-<button class="big-btn blue" onclick="downloadPDF()">Download PDF</button>
+<button style="width:90%;margin:10px;" onclick="checkout()">WhatsApp Order</button>
+<button style="width:90%;margin:10px;background:#1976d2;color:white;" onclick="downloadPDF()">Download PDF</button>
 
 <script>
 
@@ -135,7 +126,7 @@ div.innerHTML+=`<p>${i.name} - ₹${i.price}</p>`;
 document.getElementById("total").innerText="Total: ₹"+total;
 }
 
-/* CHECKOUT + STOCK + SALES */
+/* CHECKOUT */
 function checkout(){
 
 if(cart.length===0)return alert("Cart empty");
@@ -181,21 +172,13 @@ if(cart.length===0)return alert("Cart empty");
 const { jsPDF } = window.jspdf;
 let doc=new jsPDF();
 
-let y=10,total=0;
+doc.text("VISHALDEEP MEDICAL STORE",10,10);
 
-doc.setFontSize(16);
-doc.text("VISHALDEEP MEDICAL STORE",10,y);
-y+=10;
-
-doc.setFontSize(11);
-doc.text("WhatsApp: +91 98507 52963",10,y);y+=6;
-doc.text("Proprietor: Vishal Deepak Babre",10,y);y+=6;
-doc.text("Yashwant Complex Shop No 11",10,y);y+=6;
-doc.text("Takali Vinchur Lasalgaon 422306",10,y);y+=10;
+let y=20,total=0;
 
 cart.forEach(i=>{
 doc.text(i.name+" - ₹"+i.price,10,y);
-y+=8;
+y+=10;
 total+=Number(i.price);
 });
 
