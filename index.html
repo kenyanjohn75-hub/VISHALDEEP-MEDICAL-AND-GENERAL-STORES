@@ -237,7 +237,40 @@ display(f);
 }
 
 /* CART */
-function add(name,price){
+function printReceipt(){
+
+if(cart.length===0){
+alert("Cart is empty");
+return;
+}
+
+let text="VISHALDEEP MEDICAL STORE\n\n";
+let total=0;
+
+cart.forEach((i,index)=>{
+text+=(index+1)+". "+i.name+" - ₹"+i.price+"\n";
+total+=i.price;
+});
+
+text+="\nTOTAL: ₹"+total;
+
+let w=window.open("");
+
+w.document.write(`
+<div style="font-family:Arial;padding:20px;">
+<pre>${text}</pre>
+
+<hr>
+
+<h3>Scan to open our store</h3>
+<img src="${qrImage}" style="width:200px;height:200px;">
+
+<p>Thank you for shopping with Vishaldeep Medical Store</p>
+</div>
+`);
+
+w.print();
+    }
 cart.push({name,price});
 alert("Added to cart");
 }
