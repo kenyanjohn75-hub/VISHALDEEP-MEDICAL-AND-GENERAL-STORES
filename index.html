@@ -151,8 +151,8 @@ body {font-family: Arial; margin:0; background:#f5f5f5;}
 </div>
 
 <div class="actions">
-<button class="blue" id="doctorBtn" onclick="doctorHelp()">Doctor Help</button>
-<button class="green" id="shopBtn" onclick="showShop()">Shop Medicines</button>
+<button class="blue" onclick="doctorHelp()">Doctor Help</button>
+<button class="green" onclick="showShop()">Shop Medicines</button>
 <button class="gray" onclick="uploadPrescription()">Upload Rx</button>
 <button class="gray" onclick="openAdmin()">Admin</button>
 </div>
@@ -169,7 +169,7 @@ body {font-family: Arial; margin:0; background:#f5f5f5;}
 
 <div class="products" id="products"></div>
 
-<div class="cart" id="cartBox"></div>
+<div id="cartBox" style="padding:10px;"></div>
 <h3 style="padding:10px;" id="total"></h3>
 
 <div style="text-align:center;padding:10px;">
@@ -201,26 +201,28 @@ body {font-family: Arial; margin:0; background:#f5f5f5;}
 
 <script>
 
+/* STOCK DATA */
 let products = JSON.parse(localStorage.getItem("products")) || [
-{name:"Panadol (Paracetamol 500mg)",price:30,rx:false,category:"Pain Relief",stock:true,img:"https://www.panadol.com/content/dam/cf-consumer-healthcare/panadol/en_IN/products/panadol-advance-500mg.png"},
-{name:"Brufen (Ibuprofen 400mg)",price:40,rx:false,category:"Pain Relief",stock:true,img:"https://www.mims.com/resources/drug/IN/image/brufen.jpg"},
-{name:"Benylin Cough Syrup",price:120,rx:false,category:"Cough & Cold",stock:true,img:"https://www.benylin.com/content/dam/cf-consumer-healthcare/benylin/en_IN/products/benylin-cough-syrup.png"},
+{name:"Panadol 500mg",price:30,rx:false,category:"Pain Relief",stock:true,img:"https://www.panadol.com/content/dam/cf-consumer-healthcare/panadol/en_IN/products/panadol-advance-500mg.png"},
+{name:"Brufen 400mg",price:40,rx:false,category:"Pain Relief",stock:true,img:"https://www.mims.com/resources/drug/IN/image/brufen.jpg"},
+{name:"Benylin Syrup",price:120,rx:false,category:"Cough & Cold",stock:true,img:"https://www.benylin.com/content/dam/cf-consumer-healthcare/benylin/en_IN/products/benylin-cough-syrup.png"},
 {name:"Augmentin",price:150,rx:true,category:"Antibiotics",stock:false,img:"https://www.gsk.com/media/5920/augmentin-tablets.jpg"},
 {name:"Azithral",price:180,rx:true,category:"Antibiotics",stock:true,img:"https://www.ale.mb.ca/wp-content/uploads/2019/08/azithromycin.jpg"},
 {name:"Limcee Vitamin C",price:110,rx:false,category:"Vitamins",stock:true,img:"https://www.1mg.com/images/products/limcee-vitamin-c-tablet.jpg"}
 ];
 
-let cart = [];
-let rxFile = null;
+let cart=[];
+let rxFile=null;
 
+/* DISPLAY */
 function display(list){
-let div = document.getElementById("products");
-div.innerHTML = "";
+let div=document.getElementById("products");
+div.innerHTML="";
 
 list.forEach(p=>{
-div.innerHTML += `
+div.innerHTML+=`
 <div class="product">
-${p.rx ? '<div class="rx">RX</div>' : ''}
+${p.rx?'<div class="rx">RX</div>':''}
 <img src="${p.img}">
 <h4>${p.name}</h4>
 <p>${p.category}</p>
@@ -228,7 +230,7 @@ ${p.rx ? '<div class="rx">RX</div>' : ''}
 
 <button ${!p.stock?'disabled':''}
 onclick="add('${p.name}',${p.price})">
-${p.stock?'Add':'Out of Stock'}
+${p.stock?'Add':'Out'}
 </button>
 
 </div>`;
@@ -237,8 +239,9 @@ updateQR();
 }
 display(products);
 
-function add(name, price){
-let item = products.find(p=>p.name===name);
+/* CART */
+function add(name,price){
+let item=products.find(p=>p.name===name);
 if(item && !item.stock){alert("Out of stock");return;}
 cart.push({name,price});
 showCart();
@@ -248,18 +251,22 @@ function showCart(){
 let div=document.getElementById("cartBox");
 let total=0;
 div.innerHTML="";
+
 cart.forEach(i=>{
 total+=i.price;
 div.innerHTML+=`<p>${i.name} - ₹${i.price}</p>`;
 });
+
 document.getElementById("total").innerText="Total: ₹"+total;
 updateQR();
 }
 
+/* SEARCH */
 function search(q){
 display(products.filter(p=>p.name.toLowerCase().includes(q.toLowerCase())));
 }
 
+/* FILTER */
 function filterCategory(c){
 if(c==="All")return display(products);
 display(products.filter(p=>p.category===c));
@@ -267,10 +274,12 @@ display(products.filter(p=>p.category===c));
 
 function showShop(){display(products);}
 
+/* WHATSAPP */
 function doctorHelp(){
 window.open("https://wa.me/919850752963","_blank");
 }
 
+/* RX */
 function uploadPrescription(){
 document.getElementById("rxUpload").click();
 }
@@ -280,19 +289,23 @@ rxFile=e.target.files[0];
 alert("Uploaded "+rxFile.name);
 }
 
+/* CHECKOUT */
 function checkout(){
 if(cart.length===0)return alert("Cart empty");
 
-let msg="Order\n";
+let msg="ORDER\n";
 let total=0;
+
 cart.forEach((i,n)=>{
 msg+=(n+1)+". "+i.name+" - ₹"+i.price+"\n";
 total+=i.price;
 });
-msg+="Total: "+total;
+
+msg+="TOTAL: ₹"+total;
 window.open("https://wa.me/919850752963?text="+encodeURIComponent(msg));
 }
 
+/* QR */
 function getQR(){
 return "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data="+encodeURIComponent(window.location.href);
 }
@@ -301,17 +314,24 @@ function updateQR(){
 document.getElementById("qrPreview").src=getQR();
 }
 
-/* PDF */
+/* PDF ONLY (NO PRINT) */
 function downloadPDF(){
 const {jsPDF}=window.jspdf;
 let doc=new jsPDF();
+
 let y=10,total=0;
 
-doc.text("VISHALDEEP MEDICAL STORE",10,y);y+=10;
+doc.setFontSize(16);
+doc.text("VISHALDEEP MEDICAL STORE",10,y);
+y+=10;
+
+doc.setFontSize(12);
 cart.forEach((i,n)=>{
 doc.text(`${n+1}. ${i.name} - ₹${i.price}`,10,y);
-y+=8;total+=i.price;
+y+=8;
+total+=i.price;
 });
+
 doc.text("TOTAL: ₹"+total,10,y);
 doc.save("receipt.pdf");
 }
@@ -322,7 +342,7 @@ document.getElementById("adminPanel").style.display="block";
 }
 
 function loginAdmin(){
-if(document.getElementById("adminPass").value!=="1234")return alert("Wrong");
+if(document.getElementById("adminPass").value!=="1234")return alert("Wrong password");
 document.getElementById("adminArea").style.display="block";
 renderAdmin();
 }
@@ -330,6 +350,7 @@ renderAdmin();
 function renderAdmin(){
 let d=document.getElementById("adminArea");
 d.innerHTML="";
+
 products.forEach((p,i)=>{
 d.innerHTML+=`
 <div style="border:1px solid #ddd;padding:8px;margin:5px;">
@@ -351,4 +372,4 @@ display(products);
 </script>
 
 </body>
-    </html>
+</html>
