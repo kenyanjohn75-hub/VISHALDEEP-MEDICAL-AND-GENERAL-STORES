@@ -8,7 +8,7 @@
 <style>
 body {font-family: Arial; margin:0; background:#f5f5f5;}
 
-/* HEADER */
+/* HERO */
 .header {
     background: linear-gradient(135deg,#0a7d3c,#1e88e5);
     color:white;
@@ -112,7 +112,7 @@ body {font-family: Arial; margin:0; background:#f5f5f5;}
     padding:10px;
 }
 
-/* FLOAT BUTTON */
+/* FLOAT WA */
 .float-wa {
     position:fixed;
     bottom:80px;
@@ -147,7 +147,7 @@ body {font-family: Arial; margin:0; background:#f5f5f5;}
 <button onclick="setLang('mr')">मराठी</button>
 </div>
 
-<!-- HEADER -->
+<!-- HERO -->
 <div class="header">
 <img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Medical_cross_symbol.svg">
 <h2 id="storeName">Vishaldeep Medical Store</h2>
@@ -187,6 +187,7 @@ body {font-family: Arial; margin:0; background:#f5f5f5;}
 
 <script>
 
+/* PRODUCTS */
 const products = [
 {name:"Paracetamol 650mg", price:28, rx:false},
 {name:"Ibuprofen 400mg", price:35, rx:false},
@@ -202,6 +203,7 @@ let cart=[];
 function display(list){
 let div=document.getElementById("products");
 div.innerHTML="";
+
 list.forEach(p=>{
 div.innerHTML+=`
 <div class="product">
@@ -231,10 +233,12 @@ function showCart(){
 let div=document.getElementById("cartBox");
 let total=0;
 div.innerHTML="";
+
 cart.forEach(i=>{
 total+=i.price;
 div.innerHTML+=`<p>${i.name} - ₹${i.price}</p>`;
 });
+
 document.getElementById("total").innerText="Total: ₹"+total;
 }
 
@@ -251,21 +255,29 @@ document.getElementById("rxUpload").click();
 function handleUpload(e){
 let file=e.target.files[0];
 if(file){
-alert("Uploaded: "+file.name);
+alert("Prescription uploaded: "+file.name);
 }
 }
 
 /* WHATSAPP */
 function doctorHelp(){
-window.open("https://wa.me/254786467783","_blank");
+window.open("https://wa.me/919850752963","_blank");
 }
 
+/* CHECKOUT PRO */
 function checkout(){
-let msg="Order:%0A";
-cart.forEach(i=>{
-msg+=i.name+" - ₹"+i.price+"%0A";
+let msg="🧾 Vishaldeep Medical Store Order%0A%0A";
+let total=0;
+
+cart.forEach((i,index)=>{
+msg += (index+1)+". "+i.name+" - ₹"+i.price+"%0A";
+total += i.price;
 });
-window.open("https://wa.me/254786467783?text="+msg,"_blank");
+
+msg += "%0A💰 Total: ₹"+total;
+msg += "%0A%0A📍 Please confirm my order.";
+
+window.open("https://wa.me/919850752963?text="+encodeURIComponent(msg), "_blank");
 }
 
 /* LANGUAGE */
@@ -287,4 +299,4 @@ setLang("en");
 </script>
 
 </body>
-    </html>
+</html>
