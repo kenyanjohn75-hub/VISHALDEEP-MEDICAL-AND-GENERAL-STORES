@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Vishaldeep Medical Store</title>
 
+<!-- PDF LIBRARY -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 <style>
 body {font-family: Arial; margin:0; background:#f5f5f5;}
 
@@ -99,8 +102,6 @@ body {font-family: Arial; margin:0; background:#f5f5f5;}
     border-radius:5px;
 }
 
-.cart {padding:10px;}
-
 .big-btn {
     width:90%;
     margin:8px auto;
@@ -153,9 +154,9 @@ body {font-family: Arial; margin:0; background:#f5f5f5;}
 <button class="blue" id="doctorBtn" onclick="doctorHelp()">Doctor Help</button>
 <button class="green" id="shopBtn" onclick="showShop()">Shop Medicines</button>
 <button class="gray" onclick="uploadPrescription()">Upload Rx</button>
+<button class="gray" onclick="openAdmin()">Admin</button>
 </div>
 
-<!-- CATEGORY FILTER -->
 <div style="display:flex;gap:8px;padding:10px;overflow:auto;">
 <button onclick="filterCategory('All')">All</button>
 <button onclick="filterCategory('Pain Relief')">Pain Relief</button>
@@ -171,8 +172,13 @@ body {font-family: Arial; margin:0; background:#f5f5f5;}
 <div class="cart" id="cartBox"></div>
 <h3 style="padding:10px;" id="total"></h3>
 
-<button class="big-btn green" onclick="checkout()">💳 Pay Now (WhatsApp Order)</button>
-<button class="big-btn gray" onclick="printReceipt()">🧾 Print Receipt</button>
+<div style="text-align:center;padding:10px;">
+<h4>📲 Scan QR</h4>
+<img id="qrPreview" width="180">
+</div>
+
+<button class="big-btn green" onclick="checkout()">💬 WhatsApp Order</button>
+<button class="big-btn blue" onclick="downloadPDF()">⬇️ Download PDF Receipt</button>
 
 <div class="bottom-nav">
 <button onclick="showShop()">Shop</button>
@@ -181,24 +187,32 @@ body {font-family: Arial; margin:0; background:#f5f5f5;}
 
 <div class="float-wa" onclick="doctorHelp()">💬</div>
 
-<input type="file" id="rxUpload" accept="image/*,application/pdf" style="display:none" onchange="handleUpload(event)">
+<input type="file" id="rxUpload" style="display:none" onchange="handleUpload(event)">
+
+<!-- ADMIN PANEL -->
+<div id="adminPanel" style="display:none;padding:10px;background:#fff;margin:10px;border-radius:10px;">
+<h3>🔐 Admin Dashboard</h3>
+
+<input type="password" id="adminPass" placeholder="Enter password">
+<button onclick="loginAdmin()">Login</button>
+
+<div id="adminArea" style="display:none;margin-top:10px;"></div>
+</div>
 
 <script>
 
-/* PRODUCTS */
-const products = [
+let products = JSON.parse(localStorage.getItem("products")) || [
 {name:"Panadol (Paracetamol 500mg)",price:30,rx:false,category:"Pain Relief",stock:true,img:"https://www.panadol.com/content/dam/cf-consumer-healthcare/panadol/en_IN/products/panadol-advance-500mg.png"},
 {name:"Brufen (Ibuprofen 400mg)",price:40,rx:false,category:"Pain Relief",stock:true,img:"https://www.mims.com/resources/drug/IN/image/brufen.jpg"},
 {name:"Benylin Cough Syrup",price:120,rx:false,category:"Cough & Cold",stock:true,img:"https://www.benylin.com/content/dam/cf-consumer-healthcare/benylin/en_IN/products/benylin-cough-syrup.png"},
-{name:"Augmentin (Amoxicillin)",price:150,rx:true,category:"Antibiotics",stock:false,img:"https://www.gsk.com/media/5920/augmentin-tablets.jpg"},
-{name:"Azithral (Azithromycin)",price:180,rx:true,category:"Antibiotics",stock:true,img:"https://www.ale.mb.ca/wp-content/uploads/2019/08/azithromycin.jpg"},
+{name:"Augmentin",price:150,rx:true,category:"Antibiotics",stock:false,img:"https://www.gsk.com/media/5920/augmentin-tablets.jpg"},
+{name:"Azithral",price:180,rx:true,category:"Antibiotics",stock:true,img:"https://www.ale.mb.ca/wp-content/uploads/2019/08/azithromycin.jpg"},
 {name:"Limcee Vitamin C",price:110,rx:false,category:"Vitamins",stock:true,img:"https://www.1mg.com/images/products/limcee-vitamin-c-tablet.jpg"}
 ];
 
 let cart = [];
 let rxFile = null;
 
-/* DISPLAY */
 function display(list){
 let div = document.getElementById("products");
 div.innerHTML = "";
@@ -206,154 +220,133 @@ div.innerHTML = "";
 list.forEach(p=>{
 div.innerHTML += `
 <div class="product">
-
 ${p.rx ? '<div class="rx">RX</div>' : ''}
-
-<div style="position:absolute;top:8px;right:8px;
-background:${p.stock ? '#0a7d3c' : 'red'};
-color:white;font-size:10px;padding:3px 6px;border-radius:5px;">
-${p.stock ? 'In Stock' : 'Out'}
-</div>
-
 <img src="${p.img}">
-
 <h4>${p.name}</h4>
-<p style="font-size:12px;color:#777;">${p.category}</p>
+<p>${p.category}</p>
 <p class="price">₹${p.price}</p>
 
-<button ${!p.stock ? 'disabled style="background:#ccc;"' : ''}
+<button ${!p.stock?'disabled':''}
 onclick="add('${p.name}',${p.price})">
-${p.stock ? 'Add' : 'Unavailable'}
+${p.stock?'Add':'Out of Stock'}
 </button>
 
 </div>`;
 });
+updateQR();
 }
 display(products);
 
-/* CART */
 function add(name, price){
-cart.push({name, price});
-alert(name + " added to cart");
+let item = products.find(p=>p.name===name);
+if(item && !item.stock){alert("Out of stock");return;}
+cart.push({name,price});
 showCart();
 }
 
 function showCart(){
-let div = document.getElementById("cartBox");
-let total = 0;
-div.innerHTML = "";
-
+let div=document.getElementById("cartBox");
+let total=0;
+div.innerHTML="";
 cart.forEach(i=>{
-total += i.price;
-div.innerHTML += `<p>${i.name} - ₹${i.price}</p>`;
+total+=i.price;
+div.innerHTML+=`<p>${i.name} - ₹${i.price}</p>`;
 });
-
-document.getElementById("total").innerText = "Total: ₹" + total;
+document.getElementById("total").innerText="Total: ₹"+total;
+updateQR();
 }
 
-/* SEARCH */
 function search(q){
-let f = products.filter(p =>
-p.name.toLowerCase().includes(q.toLowerCase())
-);
-display(f);
+display(products.filter(p=>p.name.toLowerCase().includes(q.toLowerCase())));
 }
 
-/* FILTER */
-function filterCategory(cat){
-if(cat==="All"){display(products);return;}
-display(products.filter(p=>p.category===cat));
+function filterCategory(c){
+if(c==="All")return display(products);
+display(products.filter(p=>p.category===c));
 }
 
-/* SHOP */
 function showShop(){display(products);}
 
-/* RX */
-function uploadPrescription(){document.getElementById("rxUpload").click();}
-function handleUpload(e){rxFile=e.target.files[0];alert("RX Uploaded: "+rxFile.name);}
-
-/* WHATSAPP */
 function doctorHelp(){
 window.open("https://wa.me/919850752963","_blank");
 }
 
-/* QR */
-function getQR(){
-let url = encodeURIComponent(window.location.href);
-return "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" + url;
+function uploadPrescription(){
+document.getElementById("rxUpload").click();
 }
 
-/* CHECKOUT */
+function handleUpload(e){
+rxFile=e.target.files[0];
+alert("Uploaded "+rxFile.name);
+}
+
 function checkout(){
-if(cart.length===0){alert("Cart is empty");return;}
+if(cart.length===0)return alert("Cart empty");
 
-let msg="🧾 Vishaldeep Medical Store Order\n\n";
+let msg="Order\n";
 let total=0;
-
-cart.forEach((i,index)=>{
-msg+=(index+1)+". "+i.name+" - ₹"+i.price+"\n";
+cart.forEach((i,n)=>{
+msg+=(n+1)+". "+i.name+" - ₹"+i.price+"\n";
 total+=i.price;
 });
-
-msg+="\n💰 Total: ₹"+total;
-
-if(rxFile){msg+="\n📄 RX Uploaded";}
-
-msg+="\n\nScan QR:\n"+window.location.href;
-
-window.open("https://wa.me/919850752963?text="+encodeURIComponent(msg),"_blank");
+msg+="Total: "+total;
+window.open("https://wa.me/919850752963?text="+encodeURIComponent(msg));
 }
 
-/* PRINT */
-function printReceipt(){
-if(cart.length===0){alert("Cart is empty");return;}
+function getQR(){
+return "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data="+encodeURIComponent(window.location.href);
+}
 
-let total=0;
-let text="VISHALDEEP MEDICAL STORE\n\n";
+function updateQR(){
+document.getElementById("qrPreview").src=getQR();
+}
 
-cart.forEach((i,index)=>{
-text+=(index+1)+". "+i.name+" - ₹"+i.price+"\n";
-total+=i.price;
+/* PDF */
+function downloadPDF(){
+const {jsPDF}=window.jspdf;
+let doc=new jsPDF();
+let y=10,total=0;
+
+doc.text("VISHALDEEP MEDICAL STORE",10,y);y+=10;
+cart.forEach((i,n)=>{
+doc.text(`${n+1}. ${i.name} - ₹${i.price}`,10,y);
+y+=8;total+=i.price;
 });
-
-text+="\nTOTAL: ₹"+total;
-
-let qr=getQR();
-let w=window.open("");
-
-w.document.write(`
-<html><body style="font-family:Arial;text-align:center;padding:20px;">
-<pre>${text}</pre>
-<hr>
-<h3>Scan to open store</h3>
-<img id="qrImg" src="${qr}" width="200">
-<p>Thank you</p>
-</body></html>
-`);
-
-w.document.close();
-
-let img=w.document.getElementById("qrImg");
-img.onload=function(){w.print();w.close();};
-
-setTimeout(()=>{w.print();w.close();},3000);
+doc.text("TOTAL: ₹"+total,10,y);
+doc.save("receipt.pdf");
 }
 
-/* LANGUAGE */
-const t={
-en:{store:"Vishaldeep Medical Store",sub:"Trusted Pharmacy",doc:"Doctor Help",shop:"Shop Medicines"},
-hi:{store:"विशालदीप मेडिकल स्टोर",sub:"विश्वसनीय फार्मेसी",doc:"डॉक्टर सहायता",shop:"दवाइयाँ"},
-mr:{store:"विशालदीप मेडिकल स्टोअर",sub:"फार्मसी",doc:"डॉक्टर मदत",shop:"औषधे"}
-};
-
-function setLang(l){
-document.getElementById("storeName").innerText=t[l].store;
-document.getElementById("subtitle").innerText=t[l].sub;
-document.getElementById("doctorBtn").innerText=t[l].doc;
-document.getElementById("shopBtn").innerText=t[l].shop;
+/* ADMIN */
+function openAdmin(){
+document.getElementById("adminPanel").style.display="block";
 }
 
-setLang("en");
+function loginAdmin(){
+if(document.getElementById("adminPass").value!=="1234")return alert("Wrong");
+document.getElementById("adminArea").style.display="block";
+renderAdmin();
+}
+
+function renderAdmin(){
+let d=document.getElementById("adminArea");
+d.innerHTML="";
+products.forEach((p,i)=>{
+d.innerHTML+=`
+<div style="border:1px solid #ddd;padding:8px;margin:5px;">
+<b>${p.name}</b><br>
+<label>
+<input type="checkbox" ${p.stock?'checked':''}
+onchange="toggleStock(${i})"> In Stock
+</label>
+</div>`;
+});
+}
+
+function toggleStock(i){
+products[i].stock=!products[i].stock;
+localStorage.setItem("products",JSON.stringify(products));
+display(products);
+}
 
 </script>
 
