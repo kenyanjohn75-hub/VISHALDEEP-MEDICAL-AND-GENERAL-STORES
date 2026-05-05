@@ -1,35 +1,63 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vishaldeep Medical Store</title>
+<title>Maharashtra Medical Store</title>
 
 <style>
 body {font-family: Arial; margin:0; background:#f5f5f5;}
 
+/* HERO */
 .header {
-    background: green;
-    color: white;
-    text-align: center;
-    padding: 15px;
+    background: linear-gradient(135deg,#0a7d3c,#1e88e5);
+    color:white;
+    text-align:center;
+    padding:20px;
 }
 
+.header img {
+    width:90px;
+    height:90px;
+    border-radius:50%;
+    background:white;
+    padding:6px;
+    margin-bottom:10px;
+}
+
+/* LANGUAGE */
+.lang {
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    padding:10px;
+    background:#eee;
+}
+
+.lang button {
+    padding:6px 12px;
+    border:none;
+    border-radius:20px;
+    cursor:pointer;
+}
+
+/* SEARCH */
 .search {
-    width: 90%;
-    margin: 10px auto;
-    display: block;
-    padding: 12px;
-    border-radius: 20px;
-    border: 1px solid #ccc;
+    width:90%;
+    margin:10px auto;
+    display:block;
+    padding:12px;
+    border-radius:20px;
+    border:1px solid #ccc;
 }
 
+/* ACTION BUTTONS */
 .actions {
     display:flex;
     gap:10px;
     padding:10px;
 }
+
 .actions button {
     flex:1;
     padding:12px;
@@ -37,45 +65,49 @@ body {font-family: Arial; margin:0; background:#f5f5f5;}
     border-radius:10px;
     color:white;
 }
-.blue {background:blue;}
-.green {background:green;}
-.gray {background:#666;}
 
+.blue {background:#1976d2;}
+.green {background:#0a7d3c;}
+
+/* PRODUCTS */
 .products {
     display:grid;
     grid-template-columns:repeat(2,1fr);
     gap:10px;
     padding:10px;
 }
+
 .product {
     background:white;
     padding:10px;
     border-radius:10px;
     text-align:center;
+    position:relative;
 }
+
 .product img {
     width:100%;
     height:120px;
     object-fit:cover;
 }
-.product button {
-    margin-top:5px;
-    padding:8px;
-    border:none;
-    background:green;
+
+.price {
+    font-weight:bold;
+    color:#0a7d3c;
+}
+
+.rx {
+    position:absolute;
+    top:8px;
+    left:8px;
+    background:red;
     color:white;
+    font-size:10px;
+    padding:3px 6px;
     border-radius:5px;
 }
 
-.filters {
-    display:flex;
-    gap:10px;
-    padding:10px;
-}
-
-.page {display:none;}
-.active {display:block;}
-
+/* NAV */
 .bottom-nav {
     position:fixed;
     bottom:0;
@@ -86,207 +118,101 @@ body {font-family: Arial; margin:0; background:#f5f5f5;}
     padding:10px;
     border-top:1px solid #ccc;
 }
+
 .bottom-nav button {
     background:none;
     border:none;
-    font-size:16px;
-}
-
-/* UPSSELL POPUP */
-#upsellPopup {
-    display:none;
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:rgba(0,0,0,0.6);
-    z-index:999;
-}
-.popup-box {
-    background:white;
-    width:90%;
-    max-width:350px;
-    margin:100px auto;
-    padding:20px;
-    border-radius:15px;
-    text-align:center;
-    position:relative;
-}
-.close-btn {
-    position:absolute;
-    top:10px;
-    right:15px;
-    font-size:20px;
-    cursor:pointer;
+    font-size:14px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- HOME -->
-<div id="home" class="page active">
+<!-- LANGUAGE -->
+<div class="lang">
+<button onclick="setLang('en')">English</button>
+<button onclick="setLang('hi')">हिंदी</button>
+<button onclick="setLang('mr')">मराठी</button>
+</div>
+
+<!-- HERO WITH LOGO -->
 <div class="header">
-<h2>Vishaldeep Medical & General Store</h2>
-<p>Your trusted pharmacy</p>
+    <img src="data:image/svg+xml;utf8,
+    <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>
+    <rect width='100' height='100' fill='white'/>
+    <rect x='40' y='20' width='20' height='60' fill='%230a7d3c'/>
+    <rect x='20' y='40' width='60' height='20' fill='%230a7d3c'/>
+    </svg>">
+
+    <h2 id="title">Medical Store</h2>
+    <p id="subtitle">Trusted Pharmacy</p>
 </div>
 
+<!-- ACTIONS -->
 <div class="actions">
-<button class="blue" onclick="openWhatsApp()">Talk to Expert</button>
-<button class="green" onclick="showPage('shop')">Shop Medicines</button>
+<button class="blue" id="doctorBtn">Doctor Help</button>
+<button class="green" id="shopBtn">Shop Medicines</button>
 </div>
 
-<input class="search" placeholder="Search medicine..." onkeyup="searchHome(this.value)">
-<div class="products" id="homeProducts"></div>
-</div>
+<!-- SEARCH -->
+<input class="search" id="search" placeholder="Search medicines...">
 
-<!-- SHOP -->
-<div id="shop" class="page">
-<div class="header">
-<input class="search" placeholder="Search for Medication & Products..." onkeyup="searchShop(this.value)">
-</div>
-
-<div class="actions">
-<button class="gray">Speak to Doctor</button>
-<button class="green">Upload Prescription</button>
-</div>
-
-<div class="filters">
-<select><option>Sort by Recommended</option></select>
-<select><option>Category</option></select>
-</div>
-
-<div class="products" id="shopProducts"></div>
-</div>
-
-<!-- CART -->
-<div id="cart" class="page">
-<div class="header"><h2>Your Cart</h2></div>
-
-<div id="cartItems" style="padding:10px;"></div>
-<h3 id="total" style="padding:10px;"></h3>
-
-<button class="green" style="margin:10px;" onclick="checkout()">Order via WhatsApp</button>
-</div>
-
-<!-- UPSSELL POPUP -->
-<div id="upsellPopup">
-  <div class="popup-box">
-    <span class="close-btn" onclick="closeUpsell()">✖</span>
-    <h3>🔥 Special Offer</h3>
-    <p>Boost your recovery faster!</p>
-    <img src="https://via.placeholder.com/150">
-    <h4>Vitamin C + Zinc</h4>
-    <p style="color:green; font-weight:bold;">KES 120</p>
-    <button onclick="addUpsell()" class="green" style="width:100%;">Add to Cart</button>
-  </div>
-</div>
+<!-- PRODUCTS -->
+<div class="products" id="products"></div>
 
 <!-- NAV -->
 <div class="bottom-nav">
-<button onclick="showPage('home')">Home</button>
-<button onclick="showPage('shop')">Shop</button>
-<button onclick="showPage('cart')">Cart 🛒</button>
+<button>Home</button>
+<button>Cart</button>
 </div>
 
 <script>
+
+/* REALISTIC INDIA MEDICINES */
 const products = [
-{name:"Paracetamol", price:50, img:"https://via.placeholder.com/150"},
-{name:"Ibuprofen", price:80, img:"https://via.placeholder.com/150"},
-{name:"Vitamin C", price:100, img:"https://via.placeholder.com/150"},
-{name:"Cough Syrup", price:150, img:"https://via.placeholder.com/150"},
-{name:"Insulin", price:500, img:"https://via.placeholder.com/150"},
-{name:"Antibiotics", price:300, img:"https://via.placeholder.com/150"}
+{name:"Paracetamol 650mg (Strip 10)", price:28, rx:false},
+{name:"Ibuprofen 400mg (Strip 10)", price:35, rx:false},
+{name:"Cough Syrup 100ml", price:95, rx:false},
+{name:"Amoxicillin 500mg", price:60, rx:true},
+{name:"Azithromycin 500mg", price:120, rx:true},
+{name:"Vitamin C 500mg", price:110, rx:false},
+{name:"Multivitamin Tablets", price:150, rx:false},
+{name:"Cetirizine 10mg", price:25, rx:false}
 ];
 
-function display(id,list){
-let div=document.getElementById(id);
-if(!div) return;
+function display(){
+let div=document.getElementById("products");
 div.innerHTML="";
-list.forEach(p=>{
+
+products.forEach(p=>{
 div.innerHTML+=`
 <div class="product">
-<img src="${p.img}">
+${p.rx ? '<div class="rx">RX</div>' : ''}
+<img src="https://via.placeholder.com/150">
 <h4>${p.name}</h4>
-<p>KES ${p.price}</p>
-<button onclick="addToCart('${p.name}',${p.price})">Add to Cart</button>
+<p class="price">₹${p.price}</p>
 </div>`;
 });
 }
+display();
 
-display("homeProducts",products);
-display("shopProducts",products);
+/* LANGUAGE SYSTEM */
+const text={
+en:{title:"Medical Store",subtitle:"Trusted Pharmacy",doctor:"Doctor Help",shop:"Shop Medicines"},
+hi:{title:"मेडिकल स्टोर",subtitle:"विश्वसनीय फार्मेसी",doctor:"डॉक्टर सहायता",shop:"दवाइयाँ खरीदें"},
+mr:{title:"मेडिकल स्टोअर",subtitle:"विश्वसनीय फार्मसी",doctor:"डॉक्टर मदत",shop:"औषधे खरेदी करा"}
+};
 
-/* NAVIGATION */
-function showPage(page){
-document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-document.getElementById(page).classList.add("active");
-if(page==="cart") loadCart();
+function setLang(l){
+document.getElementById("title").innerText=text[l].title;
+document.getElementById("subtitle").innerText=text[l].subtitle;
+document.getElementById("doctorBtn").innerText=text[l].doctor;
+document.getElementById("shopBtn").innerText=text[l].shop;
 }
 
-/* SEARCH */
-function searchHome(q){
-let f=products.filter(p=>p.name.toLowerCase().includes(q.toLowerCase()));
-display("homeProducts",f);
-}
-function searchShop(q){
-let f=products.filter(p=>p.name.toLowerCase().includes(q.toLowerCase()));
-display("shopProducts",f);
-}
+setLang("en");
 
-/* CART */
-function addToCart(name,price){
-let cart=JSON.parse(localStorage.getItem("cart"))||[];
-cart.push({name,price});
-localStorage.setItem("cart",JSON.stringify(cart));
-alert("Added to cart");
-}
-
-function loadCart(){
-let cart=JSON.parse(localStorage.getItem("cart"))||[];
-let div=document.getElementById("cartItems");
-let total=0;
-div.innerHTML="";
-cart.forEach(item=>{
-total+=item.price;
-div.innerHTML+=`<p>${item.name} - KES ${item.price}</p>`;
-});
-document.getElementById("total").innerText="Total: KES "+total;
-}
-
-/* WHATSAPP */
-function openWhatsApp(){
-window.open("https://wa.me/919850752963","_blank");
-}
-
-/* CHECKOUT + UPSELL */
-function checkout(){
-let cart=JSON.parse(localStorage.getItem("cart"))||[];
-let msg="Order:%0A";
-cart.forEach(i=>msg+=i.name+" - "+i.price+"%0A");
-
-window.open("https://wa.me/919850752963?text="+msg,"_blank");
-
-setTimeout(showUpsell,1500);
-}
-
-/* UPSELL */
-function showUpsell(){
-if(sessionStorage.getItem("upsellShown")) return;
-document.getElementById("upsellPopup").style.display="block";
-sessionStorage.setItem("upsellShown","true");
-}
-
-function closeUpsell(){
-document.getElementById("upsellPopup").style.display="none";
-}
-
-function addUpsell(){
-addToCart("Vitamin C + Zinc",120);
-closeUpsell();
-alert("Added to cart!");
-}
 </script>
 
 </body>
